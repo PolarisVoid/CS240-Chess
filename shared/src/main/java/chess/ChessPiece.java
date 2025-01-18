@@ -75,6 +75,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return null;
+        return switch (this.Type) {
+            case KING -> new KingMoves().getMoves(board, myPosition, TeamColor);
+            case QUEEN -> new QueenMoves().getMoves(board, myPosition, TeamColor);
+            case BISHOP -> new BishopMoves().getMoves(board, myPosition, TeamColor);
+            case ROOK -> new RookMoves().getMoves(board, myPosition, TeamColor);
+            case KNIGHT -> new KnightMoves().getMoves(board, myPosition, TeamColor);
+            case PAWN -> new PawnMoves().getMoves(board, myPosition, TeamColor);
+        };
     }
 }
