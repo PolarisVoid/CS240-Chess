@@ -50,7 +50,6 @@ public class ChessBoard {
                 this.Board[i][j] = null;
             }
         }
-        this.resetBoard();
     }
 
     /**
