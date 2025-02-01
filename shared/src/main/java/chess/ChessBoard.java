@@ -89,7 +89,11 @@ public class ChessBoard {
             promotion = getPiece(start);
         }
         else {
-            promotion = new ChessPiece(getPiece(start).getTeamColor(), move.getPromotionPiece());
+            ChessPiece piece = getPiece(start);
+            if (piece == null) {
+                return;
+            }
+            promotion = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
         }
         addPiece(start, null);
         addPiece(end, promotion);
