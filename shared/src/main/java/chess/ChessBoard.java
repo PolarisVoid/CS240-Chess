@@ -80,6 +80,21 @@ public class ChessBoard {
         return this.Board[8-position.getRow()][position.getColumn()-1];
     }
 
+    public void makeMove(ChessMove move) {
+        ChessPosition start = move.getEndPosition();
+        ChessPosition end = move.getEndPosition();
+        ChessPiece promotion;
+
+        if (move.getPromotionPiece() == null) {
+            promotion = getPiece(start);
+        }
+        else {
+            promotion = new ChessPiece(getPiece(start).getTeamColor(), move.getPromotionPiece());
+        }
+        addPiece(start, null);
+        addPiece(end, promotion);
+    }
+
     private void SetupRow(int row, ChessPiece.PieceType[] Pieces, ChessGame.TeamColor color) {
         for (int i = 0; i < 8; ++i) {
             this.Board[row][i] = new ChessPiece(color, Pieces[i]);

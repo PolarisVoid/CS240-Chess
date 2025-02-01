@@ -43,7 +43,6 @@ public class RookMoves {
 //            System.out.print("Down" + col);
             ChessPiece currentSquare = board.getPiece(new ChessPosition(myPosition.getRow(), col));
             if (currentSquare != null) {
-                System.out.print(currentSquare);
                 if (currentSquare.getTeamColor() != color) {
                     moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow(), col), null));
                 }
