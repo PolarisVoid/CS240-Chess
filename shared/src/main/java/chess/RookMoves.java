@@ -2,70 +2,53 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.BiPredicate;
 
 public class RookMoves {
-    public Collection<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
+    public static BiPredicate<Integer, Integer> thresholdConstructor(int rowThreshold, int colThreshold, int type) {
+        return switch (type) {
+            case 0 -> (row, col) -> row > rowThreshold && col > colThreshold;
+            case 1 -> (row, col) -> row < rowThreshold && col > colThreshold;
+            case 2 -> (row, col) -> row > rowThreshold && col < colThreshold;
+            case 3 -> (row, col) -> row < rowThreshold && col < colThreshold;
+            default -> throw new IllegalArgumentException("Invalid type");
+        };
+    }
+
+    public static Collection<ChessMove> interationMove(
+            int rowChange, int colChange,
+            BiPredicate<Integer, Integer> outOfBounds,
+            ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
-        // Left
-        int row = myPosition.getRow() - 1;
-        while (row > 0) {
-//            System.out.print("Left " + row);
-            ChessPiece currentSquare = board.getPiece(new ChessPosition(row, myPosition.getColumn()));
-            if (currentSquare != null) {
-                if (currentSquare.getTeamColor() != color) {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, myPosition.getColumn()), null));
-                }
-                break;
-            }
-            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, myPosition.getColumn()), null));
-            row--;
-        }
+        int row = myPosition.getRow() + rowChange;
+        int col = myPosition.getColumn() + colChange;
 
-        // Right
-        row = myPosition.getRow() + 1;
-        while (row < 9) {
-//            System.out.print("Right " + row);
-            ChessPiece currentSquare = board.getPiece(new ChessPosition(row, myPosition.getColumn()));
-            if (currentSquare != null) {
-                if (currentSquare.getTeamColor() != color) {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, myPosition.getColumn()), null));
+        while (outOfBounds.test(row, col)) {
+            int newRow = row;
+            int newCol = col;
+            ChessPiece proposedMove = board.getPiece(new ChessPosition(newRow, newCol));
+            if (proposedMove != null) {
+                if (proposedMove.getTeamColor() != color) {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
                 }
                 break;
             }
-            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, myPosition.getColumn()), null));
-            row++;
+            moves.add(new ChessMove(myPosition, new ChessPosition(newRow, newCol), null));
+            row = row + rowChange;
+            col = col + colChange;
         }
+        return moves;
+    }
 
-        // Down
-        int col = myPosition.getColumn() - 1;
-        while (col > 0) {
-//            System.out.print("Down" + col);
-            ChessPiece currentSquare = board.getPiece(new ChessPosition(myPosition.getRow(), col));
-            if (currentSquare != null) {
-                if (currentSquare.getTeamColor() != color) {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow(), col), null));
-                }
-                break;
-            }
-            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow(), col), null));
-            col--;
-        }
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
-        // Up
-        col = myPosition.getColumn() + 1;
-        while (col < 9) {
-//            System.out.print("Up" + col);
-            ChessPiece currentSquare = board.getPiece(new ChessPosition(myPosition.getRow(), col));
-            if (currentSquare != null) {
-                if (currentSquare.getTeamColor() != color) {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow(), col), null));
-                }
-                break;
-            }
-            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow(), col), null));
-            col++;
-        }
+        moves.addAll(interationMove(1, 0, thresholdConstructor(9, 9, 3), myPosition, board, color));
+        moves.addAll(interationMove(-1, 0, thresholdConstructor(0, 0, 0), myPosition, board, color));
+        moves.addAll(interationMove(0, 1, thresholdConstructor(9, 9, 3), myPosition, board, color));
+        moves.addAll(interationMove(0, -1, thresholdConstructor(0, 0, 0), myPosition, board, color));
+
         return moves;
     }
 }

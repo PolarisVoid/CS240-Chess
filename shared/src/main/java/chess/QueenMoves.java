@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class QueenMoves {
-    public Collection<ChessMove> getMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
-        moves.addAll(new RookMoves().getMoves(board, myPosition, color));
-        moves.addAll(new BishopMoves().getMoves(board, myPosition, color));
+        moves.addAll(BishopMoves.pieceMoves(board, myPosition, color));
+        moves.addAll(RookMoves.pieceMoves(board, myPosition, color));
 
         return moves;
     }
