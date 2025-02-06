@@ -41,6 +41,10 @@ public class ChessBoard {
                 '}';
     }
 
+    public ChessBoard copy() {
+        return new ChessBoard(Board);
+    }
+
     private ChessPiece[][] Board;
 
     public ChessBoard() {
@@ -48,6 +52,15 @@ public class ChessBoard {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 this.Board[i][j] = null;
+            }
+        }
+    }
+
+    public ChessBoard(ChessPiece[][] board) {
+        this.Board = new ChessPiece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                this.Board[i][j] = board[i][j];
             }
         }
     }
