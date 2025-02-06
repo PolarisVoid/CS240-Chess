@@ -34,6 +34,10 @@ public class ChessPiece {
                 '}';
     }
 
+    public ChessPiece copy() {
+        return new ChessPiece(TeamColor, Type);
+    }
+
     private ChessGame.TeamColor TeamColor;
     private ChessPiece.PieceType Type;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
