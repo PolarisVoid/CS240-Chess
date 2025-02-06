@@ -76,12 +76,12 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return switch (this.Type) {
-            case KING -> new KingMoves().getMoves(board, myPosition, TeamColor);
-            case QUEEN -> new QueenMoves().getMoves(board, myPosition, TeamColor);
-            case BISHOP -> new BishopMoves().getMoves(board, myPosition, TeamColor);
-            case ROOK -> new RookMoves().getMoves(board, myPosition, TeamColor);
-            case KNIGHT -> new KnightMoves().getMoves(board, myPosition, TeamColor);
-            case PAWN -> new PawnMoves().getMoves(board, myPosition, TeamColor);
+            case KING -> KingMoves.pieceMoves(board, myPosition, TeamColor);
+            case QUEEN -> QueenMoves.pieceMoves(board, myPosition, TeamColor);
+            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, TeamColor);
+            case ROOK -> RookMoves.pieceMoves(board, myPosition, TeamColor);
+            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, TeamColor);
+            case PAWN -> PawnMoves.pieceMoves(board, myPosition, TeamColor);
         };
     }
 }
