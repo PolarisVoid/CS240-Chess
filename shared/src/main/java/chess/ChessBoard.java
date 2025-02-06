@@ -60,7 +60,11 @@ public class ChessBoard {
         this.Board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                this.Board[i][j] = board[i][j];
+                ChessPiece piece = board[i][j];
+                if (piece == null) {
+                    continue;
+                }
+                this.Board[i][j] = board[i][j].copy();
             }
         }
     }
@@ -75,7 +79,6 @@ public class ChessBoard {
         if (1 > position.getRow() || 8 < position.getRow() || 1 > position.getColumn() || 8 < position.getColumn()){
             return;
         }
-
         this.Board[8-position.getRow()][position.getColumn()-1] = piece;
     }
 
@@ -94,7 +97,7 @@ public class ChessBoard {
     }
 
     public void makeMove(ChessMove move) {
-        ChessPosition start = move.getEndPosition();
+        ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         ChessPiece promotion;
 
