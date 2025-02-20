@@ -181,8 +181,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        Collection<ChessMove> moves = getValidMoves(startPosition, board);
-        return moves;
+        return getValidMoves(startPosition, board);
     }
 
     /**
