@@ -21,13 +21,13 @@ public class Server {
     }
 
     private void registerEndpoints() {
-        Spark.delete("/db", ClearDatabaseHandler::request); // Clear Database
-        Spark.post("/user", RegisterHandler::request); // Register
-        Spark.post("/session", LoginHandler::request); // Login
-        Spark.delete("/session", LogoutHandler::request); // Logout
-        Spark.get("/game", GetGameHandler::request); // Get Games
-        Spark.post("/game", CreateGameHandler::request); // Create Game
-        Spark.put("/game", JoinGameHandler::request); // Join Game
+        Spark.delete("/db", new ClearDatabaseHandler()); // Clear Database
+        Spark.post("/user", new RegisterHandler()); // Register
+        Spark.post("/session", new LoginHandler()); // Login
+        Spark.delete("/session", new LogoutHandler()); // Logout
+        Spark.get("/game", new GetGameHandler()); // Get Games
+        Spark.post("/game", new CreateGameHandler()); // Create Game
+        Spark.put("/game", new JoinGameHandler()); // Join Game
     }
 
     public void stop() {
