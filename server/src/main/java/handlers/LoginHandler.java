@@ -28,7 +28,7 @@ public class LoginHandler implements Route {
             return "{\"message\": \"Error: unauthorized\" }";
         } catch (Exception e) {
             response.status(500);
-            return "{\"message\": \"Error: " + e.toString() + "\" }";
+            return "{\"message\": \"Error: " + e + "\" }";
         }
     }
 }
