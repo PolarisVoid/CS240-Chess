@@ -7,5 +7,5 @@ public class GetGameRequest {
         this.authToken = authToken;
     }
 
-    String getAuthToken() {return this.authToken;}
+    public String getAuthToken() {return this.authToken;}
 }

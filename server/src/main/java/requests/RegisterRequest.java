@@ -11,7 +11,7 @@ public class RegisterRequest {
         this.email = email;
     }
 
-    String getUsername() {return this.username;}
-    String getPassword() {return this.password;}
-    String getEmail() {return this.email;}
+    public String getUsername() {return this.username;}
+    public String getPassword() {return this.password;}
+    public String getEmail() {return this.email;}
 }

@@ -9,6 +9,6 @@ public class LoginRequest {
         this.password = password;
     }
 
-    String getUsername() {return this.username;}
-    String getPassword() {return this.password;}
+    public String getUsername() {return this.username;}
+    public String getPassword() {return this.password;}
 }
