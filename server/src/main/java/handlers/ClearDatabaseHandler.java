@@ -14,7 +14,7 @@ public class ClearDatabaseHandler implements Route {
             return "{}";
         } catch (Exception e) {
             response.status(500);
-            return "{\"message\": \"Error: " + e.toString() + "\" }";
+            return "{\"message\": \"Error: " + e + "\" }";
         }
     }
 }
