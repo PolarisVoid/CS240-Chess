@@ -5,7 +5,7 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 
-public class ClearDatabaseService {
+public class ClearDatabaseService extends BaseService {
 
     public static void clearDatabase() throws DataAccessException {
         new MemoryAuthDAO().clear();

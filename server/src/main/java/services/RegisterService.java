@@ -9,9 +9,8 @@ import model.UserData;
 import requests.RegisterRequest;
 import responses.RegisterResponse;
 
-import javax.xml.crypto.Data;
 
-public class RegisterService {
+public class RegisterService extends BaseService {
     public static RegisterResponse register(RegisterRequest registerRequest) throws AlreadyTakenException, DataAccessException, Exception {
         UserData user = new MemoryUserDAO().getUser(registerRequest.getUsername());
 

@@ -12,7 +12,7 @@ import responses.LoginResponse;
 
 import java.util.Objects;
 
-public class LoginService {
+public class LoginService extends BaseService {
 
     public static LoginResponse login(LoginRequest loginRequest) throws UnathorizedException, DataAccessException, Exception {
         UserData user = new MemoryUserDAO().getUser(loginRequest.getUsername());
