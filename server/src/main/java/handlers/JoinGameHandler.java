@@ -14,7 +14,9 @@ public class JoinGameHandler implements Route {
     private JoinGameRequest createRequest(Request request) throws InvalidRequestException {
         try {
             String authToken = request.attribute("authorization");
-            return new JoinGameRequest(authToken);
+            String playerColor = request.attribute("playerColor");
+            int gameID = request.attribute("gameID");
+            return new JoinGameRequest(authToken, playerColor, gameID);
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
         }
