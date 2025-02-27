@@ -1,8 +1,6 @@
 package responses;
 
 public class RegisterResponse {
-
-
     @Override
     public String toString() {
         return "{ \"username\":\"" + this.username + "\", authToken\": \"" + this.authToken + "\" }";
