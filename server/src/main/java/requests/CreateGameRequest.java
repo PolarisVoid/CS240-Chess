@@ -8,4 +8,7 @@ public class CreateGameRequest {
         this.authToken = authToken;
         this.gameName = gameName;
     }
+
+    String getAuthToken() {return this.authToken;}
+    String getGameName() {return this.gameName;}
 }

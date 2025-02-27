@@ -10,4 +10,8 @@ public class RegisterRequest {
         this.password = password;
         this.email = email;
     }
+
+    String getUsername() {return this.username;}
+    String getPassword() {return this.password;}
+    String getEmail() {return this.email;}
 }

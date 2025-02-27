@@ -6,4 +6,6 @@ public class GetGameRequest {
     public GetGameRequest(String authToken) {
         this.authToken = authToken;
     }
+
+    String getAuthToken() {return this.authToken;}
 }

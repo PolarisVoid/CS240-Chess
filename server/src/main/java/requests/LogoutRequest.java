@@ -6,4 +6,6 @@ public class LogoutRequest {
     public LogoutRequest(String authToken) {
         this.authToken = authToken;
     }
+
+    String getAuthToken() {return this.authToken;}
 }

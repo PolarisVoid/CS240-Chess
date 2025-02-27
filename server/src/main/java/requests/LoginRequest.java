@@ -8,4 +8,7 @@ public class LoginRequest {
         this.username = username;
         this.password = password;
     }
+
+    String getUsername() {return this.username;}
+    String getPassword() {return this.password;}
 }

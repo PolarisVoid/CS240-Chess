@@ -10,4 +10,8 @@ public class JoinGameRequest {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
+
+    String getAuthToken() {return this.authToken;}
+    String getPlayerColor() {return this.playerColor;}
+    int getGameID() {return this.gameID;}
 }
