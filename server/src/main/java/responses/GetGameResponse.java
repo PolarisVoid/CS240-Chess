@@ -1,6 +1,6 @@
 package responses;
 
-import dataclasses.GameData;
+import model.GameData;
 
 import java.util.ArrayList;
 
