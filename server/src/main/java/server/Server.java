@@ -1,9 +1,14 @@
 package server;
 
+import dataaccess.*;
 import handlers.*;
 import spark.*;
 
 public class Server {
+
+//    UserDAO UserTable = new MemoryUserDAO();
+//    GameDAO GameTable = new MemoryGameDAO();
+//    AuthDAO AuthTable = new MemoryAuthDAO();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
