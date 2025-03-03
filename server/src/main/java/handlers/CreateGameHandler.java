@@ -1,8 +1,10 @@
 package handlers;
 
+import com.google.gson.Gson;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
 import requests.CreateGameRequest;
+import responses.CreateGameResponse;
 import services.CreateGameService;
 import spark.Request;
 import spark.Response;
@@ -12,9 +14,10 @@ public class CreateGameHandler implements Route {
 
     private CreateGameRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String authToken = request.attribute("authToken");
-            String gameName = request.attribute("gameName");
-            return new CreateGameRequest(authToken, gameName);
+            String authToken = request.headers("authorization");
+            CreateGameRequest createGameRequest = new Gson().fromJson(request.body(), CreateGameRequest.class);
+            createGameRequest.setAuthToken(authToken);
+            return createGameRequest;
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
         }
