@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
@@ -13,10 +14,10 @@ public class JoinGameHandler implements Route {
 
     private JoinGameRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String authToken = request.attribute("authorization");
-            String playerColor = request.attribute("playerColor");
-            int gameID = request.attribute("gameID");
-            return new JoinGameRequest(authToken, playerColor, gameID);
+            String authToken = request.headers("authorization");
+            JoinGameRequest joinGameRequest = new Gson().fromJson(request.body(), JoinGameRequest.class);
+            joinGameRequest.setAuthToken(authToken);
+            return joinGameRequest;
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
         }
