@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO {
     public static ArrayList<GameData> Database = new ArrayList<>();
-    public static int counter = 0;
+    public static int counter = 1;
 
     @Override
     public void clear() throws DataAccessException {
