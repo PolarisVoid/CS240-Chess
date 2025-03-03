@@ -11,7 +11,7 @@ import responses.RegisterResponse;
 
 
 public class RegisterService extends BaseService {
-    public static RegisterResponse register(RegisterRequest registerRequest) throws AlreadyTakenException, DataAccessException, Exception {
+    public static RegisterResponse register(RegisterRequest registerRequest) throws Exception {
         UserData user = new MemoryUserDAO().getUser(registerRequest.getUsername());
 
         if (user != null) {
@@ -19,17 +19,7 @@ public class RegisterService extends BaseService {
         }
 
         user = new MemoryUserDAO().createUser(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getEmail());
-
-        if (user == null) {
-            throw new Exception("User wasn't created");
-        }
-
         AuthData authData = new MemoryAuthDAO().createAuth(user.username());
-
-        if (authData == null) {
-            throw new Exception("AuthData not created.");
-        }
-
         return new RegisterResponse(user.username(), authData.authToken());
     }
 }

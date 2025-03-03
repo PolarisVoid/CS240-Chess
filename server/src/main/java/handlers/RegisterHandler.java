@@ -1,5 +1,6 @@
 package handlers;
 
+import com.google.gson.Gson;
 import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
 import requests.RegisterRequest;
@@ -12,10 +13,7 @@ public class RegisterHandler implements Route {
 
     private RegisterRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String username = request.attribute("username");
-            String password = request.attribute("password");
-            String email = request.attribute("email");
-            return new RegisterRequest(username, password, email);
+            return new Gson().fromJson(request.body(), RegisterRequest.class);
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
         }
