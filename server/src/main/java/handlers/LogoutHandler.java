@@ -12,7 +12,7 @@ public class LogoutHandler implements Route {
 
     private LogoutRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String authToken = request.attribute("authorization");
+            String authToken = request.headers("authorization");
             return new LogoutRequest(authToken);
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
