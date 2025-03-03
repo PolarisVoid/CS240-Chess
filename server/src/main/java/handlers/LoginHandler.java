@@ -7,15 +7,15 @@ import services.LoginService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import com.google.gson.Gson;
 
 public class LoginHandler implements Route {
 
     private LoginRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String username = request.attribute("username");
-            String password = request.attribute("password");
-            return new LoginRequest(username, password);
+            return new Gson().fromJson(request.body(), LoginRequest.class);
         } catch (Exception e) {
+            System.out.println(e);
             throw new InvalidRequestException(e.toString());
         }
     }

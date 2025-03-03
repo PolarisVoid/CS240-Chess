@@ -3,7 +3,7 @@ package responses;
 public class LoginResponse {
     @Override
     public String toString() {
-        return "{ \"username\":\"" + this.username + "\", authToken\": \"" + this.authToken + "\" }";
+        return "{ \"username\":\"" + this.username + "\", \"authToken\": \"" + this.authToken + "\" }";
     }
 
     String username;
