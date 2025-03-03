@@ -8,15 +8,20 @@ public class GetGameResponse {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder("{ \"games\": [");
-        for (GameData game : games) {
-            string.append("{\"gameID\":").append(game.gameID());
-            string.append(", \"whiteUsername\":\"").append(game.whiteUsername()).append("\"");
-            string.append(", \"blackUsername\":\"").append(game.blackUsername()).append("\"");
-            string.append(", \"gameName\": \"").append(game.gameName()).append("\"}");
+        if (games.isEmpty()) {
+            return "{ \"games\": []}";
+        } else {
+            StringBuilder string = new StringBuilder("{ \"games\": [");
+            for (GameData game : games) {
+                string.append("{\"gameID\":").append(game.gameID());
+                string.append(", \"whiteUsername\":\"").append(game.whiteUsername()).append("\"");
+                string.append(", \"blackUsername\":\"").append(game.blackUsername()).append("\"");
+                string.append(", \"gameName\": \"").append(game.gameName()).append("\"},");
+            }
+            string.deleteCharAt(string.length() - 1);
+            string.append(" ]}");
+            return string.toString();
         }
-        string.append(" ]}");
-        return string.toString();
     }
 
     ArrayList<GameData> games;

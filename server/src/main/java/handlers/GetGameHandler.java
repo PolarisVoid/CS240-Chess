@@ -12,7 +12,7 @@ public class GetGameHandler implements Route {
 
     private GetGameRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            String authToken = request.attribute("authToken");
+            String authToken = request.headers("authorization");
             return new GetGameRequest(authToken);
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
