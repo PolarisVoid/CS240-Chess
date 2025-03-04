@@ -6,8 +6,8 @@ public class LoginResponse {
         return "{ \"username\":\"" + this.username + "\", \"authToken\": \"" + this.authToken + "\" }";
     }
 
-    String username;
-    String authToken;
+    final String username;
+    final String authToken;
     public LoginResponse(String username, String authToken) {
         this.username = username;
         this.authToken = authToken;

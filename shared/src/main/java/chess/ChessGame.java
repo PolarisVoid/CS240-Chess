@@ -131,7 +131,7 @@ public class ChessGame {
     }
 
     public Collection<ChessMove> getAllValidMoves(TeamColor color, ChessBoard board) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition position = new ChessPosition(i, j);
@@ -161,10 +161,10 @@ public class ChessGame {
     private Collection<ChessMove> getValidMoves(ChessPosition startPosition, ChessBoard board) {
         ChessPiece piece = board.getPiece(startPosition);
         if (piece == null) {
-            return new ArrayList<ChessMove>();
+            return new ArrayList<>();
         }
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
-        Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
+        Collection<ChessMove> validMoveList = new ArrayList<>();
         for (ChessMove move: moves) {
             if (validMove(move, piece.getTeamColor(), board)) {
                 validMoveList.add(move);

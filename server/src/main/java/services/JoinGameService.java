@@ -1,5 +1,6 @@
 package services;
 
+import chess.ChessGame;
 import dataaccess.MemoryGameDAO;
 import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
@@ -7,21 +8,17 @@ import model.AuthData;
 import model.GameData;
 import requests.JoinGameRequest;
 
-import java.util.Objects;
-
 public class JoinGameService extends BaseService {
 
-    private static boolean validJoin(String playerColor, GameData game) {
+    private static boolean validJoin(ChessGame.TeamColor playerColor, GameData game) {
         switch (playerColor) {
-            case "WHITE" -> {
-                System.out.println(game.whiteUsername());
-                if (Objects.equals(game.whiteUsername(), "")) {
+            case ChessGame.TeamColor.WHITE -> {
+                if (game.whiteUsername() == null) {
                     return true;
                 }
             }
-            case "BLACK" -> {
-                System.out.println(game.blackUsername());
-                if (Objects.equals(game.blackUsername(), "")) {
+            case ChessGame.TeamColor.BLACK -> {
+                if (game.blackUsername() == null) {
                     return true;
                 }
             }
@@ -46,8 +43,8 @@ public class JoinGameService extends BaseService {
         }
 
         switch (joinGameRequest.getPlayerColor()) {
-            case "WHITE" -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), authData.username(), game.blackUsername(), game.game());
-            case "BLACK" -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), game.whiteUsername(), authData.username(), game.game());
+            case ChessGame.TeamColor.WHITE -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), authData.username(), game.blackUsername(), game.game());
+            case ChessGame.TeamColor.BLACK -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), game.whiteUsername(), authData.username(), game.game());
             default -> throw new InvalidRequestException("Couldn't Find Color");
         }
     }

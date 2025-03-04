@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO {
-    public static ArrayList<GameData> Database = new ArrayList<>();
+    public static final ArrayList<GameData> Database = new ArrayList<>();
     public static int counter = 1;
 
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() {
         Database.clear();
+        counter = 1;
     }
 
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
         try {
-            GameData game = new GameData(counter, "", "", gameName, new ChessGame());
+            GameData game = new GameData(counter, gameName, null, null, new ChessGame());
             Database.add(game);
+            counter += 1;
             return game;
         } catch (Exception e) {
             throw new DataAccessException("Could not Create Game");

@@ -13,7 +13,11 @@ public class RegisterHandler implements Route {
 
     private RegisterRequest createRequest(Request request) throws InvalidRequestException {
         try {
-            return new Gson().fromJson(request.body(), RegisterRequest.class);
+            RegisterRequest registerRequest = new Gson().fromJson(request.body(), RegisterRequest.class);
+            if (registerRequest.getPassword() == null || registerRequest.getUsername() == null || registerRequest.getEmail() == null) {
+                throw new InvalidRequestException("Missing Information");
+            }
+            return registerRequest;
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
         }

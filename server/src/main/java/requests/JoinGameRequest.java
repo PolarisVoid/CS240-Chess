@@ -1,18 +1,20 @@
 package requests;
 
+import chess.ChessGame;
+
 public class JoinGameRequest {
 
     String authToken;
-    String playerColor;
-    int gameID;
+    final ChessGame.TeamColor playerColor;
+    final int gameID;
 
-    public JoinGameRequest(String playerColor, int gameID) {
+    public JoinGameRequest(ChessGame.TeamColor playerColor, int gameID) {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
 
     public String getAuthToken() {return this.authToken;}
-    public String getPlayerColor() {return this.playerColor;}
+    public ChessGame.TeamColor getPlayerColor() {return this.playerColor;}
     public int getGameID() {return this.gameID;}
 
     public void setAuthToken(String authToken) {

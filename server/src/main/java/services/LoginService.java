@@ -21,7 +21,6 @@ public class LoginService extends BaseService {
         }
 
         if (!Objects.equals(user.password(), loginRequest.getPassword())) {
-            System.out.println("Wrong Password");
             throw new UnathorizedException("Incorrect Password");
         }
 

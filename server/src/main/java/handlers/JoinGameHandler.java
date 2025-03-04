@@ -17,9 +17,14 @@ public class JoinGameHandler implements Route {
             String authToken = request.headers("authorization");
             JoinGameRequest joinGameRequest = new Gson().fromJson(request.body(), JoinGameRequest.class);
             joinGameRequest.setAuthToken(authToken);
+
+            if (joinGameRequest.getPlayerColor() == null) {
+                throw new InvalidRequestException("Bad Team Color");
+            }
+
             return joinGameRequest;
         } catch (Exception e) {
-            throw new InvalidRequestException(e.toString());
+            throw new InvalidRequestException("Bad Request");
         }
     }
     @Override

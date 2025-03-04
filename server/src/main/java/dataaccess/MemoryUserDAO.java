@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MemoryUserDAO implements UserDAO {
-    public static ArrayList<UserData> Database = new ArrayList<>();
+    public static final ArrayList<UserData> Database = new ArrayList<>();
 
     @Override
-    public void clear() throws DataAccessException {
+    public void clear() {
         Database.clear();
     }
 

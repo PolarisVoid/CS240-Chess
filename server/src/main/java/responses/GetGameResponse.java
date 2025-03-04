@@ -14,8 +14,8 @@ public class GetGameResponse {
             StringBuilder string = new StringBuilder("{ \"games\": [");
             for (GameData game : games) {
                 string.append("{\"gameID\":").append(game.gameID());
-                string.append(", \"whiteUsername\":\"").append(game.whiteUsername()).append("\"");
-                string.append(", \"blackUsername\":\"").append(game.blackUsername()).append("\"");
+                string.append(", \"whiteUsername\":").append(game.whiteUsername() != null ? "\"" + game.whiteUsername() + "\"" : null);
+                string.append(", \"blackUsername\":").append(game.blackUsername() != null ? "\"" + game.blackUsername() + "\"" : null);
                 string.append(", \"gameName\": \"").append(game.gameName()).append("\"},");
             }
             string.deleteCharAt(string.length() - 1);
@@ -24,7 +24,7 @@ public class GetGameResponse {
         }
     }
 
-    ArrayList<GameData> games;
+    final ArrayList<GameData> games;
     public GetGameResponse() {
         this.games = new ArrayList<>();
     }

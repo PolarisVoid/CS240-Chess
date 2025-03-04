@@ -3,7 +3,7 @@ package requests;
 public class CreateGameRequest {
 
     String authToken;
-    String gameName;
+    final String gameName;
     public CreateGameRequest(String gameName) {
         this.gameName = gameName;
     }

@@ -2,7 +2,7 @@ package requests;
 
 public class GetGameRequest {
 
-    String authToken;
+    final String authToken;
     public GetGameRequest(String authToken) {
         this.authToken = authToken;
     }

@@ -1,6 +1,5 @@
 package services;
 
-import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyTakenException;

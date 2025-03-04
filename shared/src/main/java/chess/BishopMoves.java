@@ -20,7 +20,7 @@ public class BishopMoves {
             int rowChange, int colChange,
             BiPredicate<Integer, Integer> outOfBounds,
             ChessPosition myPosition, ChessBoard board, ChessGame.TeamColor color) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
 
         int row = myPosition.getRow() + rowChange;
         int col = myPosition.getColumn() + colChange;
@@ -43,7 +43,7 @@ public class BishopMoves {
     }
 
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
 
         moves.addAll(interationMove(1, 1, thresholdConstructor(9, 9, 3), myPosition, board, color));
         moves.addAll(interationMove(-1, 1, thresholdConstructor(0, 9, 2), myPosition, board, color));

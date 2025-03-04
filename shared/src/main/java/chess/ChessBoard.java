@@ -26,13 +26,13 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        String boardString = "";
+        StringBuilder boardString = new StringBuilder();
         for (int i = 0; i < 8; i++) {
-            boardString = boardString + " {";
+            boardString.append(" {");
             for (int j = 0; j < 8; j++) {
-                boardString = boardString + " " + Board[i][j];
+                boardString.append(" ").append(Board[i][j]);
             }
-            boardString = boardString + " }\n";
+            boardString.append(" }\n");
         }
 
 
@@ -45,7 +45,7 @@ public class ChessBoard {
         return new ChessBoard(Board);
     }
 
-    private ChessPiece[][] Board;
+    private final ChessPiece[][] Board;
 
     public ChessBoard() {
         this.Board = new ChessPiece[8][8];

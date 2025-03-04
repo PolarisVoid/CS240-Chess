@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -38,8 +37,8 @@ public class ChessPiece {
         return new ChessPiece(TeamColor, Type);
     }
 
-    private ChessGame.TeamColor TeamColor;
-    private ChessPiece.PieceType Type;
+    private final ChessGame.TeamColor TeamColor;
+    private final ChessPiece.PieceType Type;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.TeamColor = pieceColor;
         this.Type = type;

@@ -6,7 +6,7 @@ import java.util.Collection;
 public class PawnMoves {
 
     private static Collection<ChessMove> generateMoves(ChessPosition startPosition,ChessPosition endPosition,Collection<ChessPiece.PieceType> promotionPieces) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
         if (promotionPieces.isEmpty()) {
             moves.add(new ChessMove(startPosition, endPosition, null));
             return moves;
@@ -18,7 +18,7 @@ public class PawnMoves {
     }
 
     private static Collection<ChessMove> getPawnMoves(int startRow, int promotionRow, int[][] Offsets, ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -29,7 +29,7 @@ public class PawnMoves {
                 continue;
             }
 
-            Collection<ChessPiece.PieceType> promotionPieces = new ArrayList<ChessPiece.PieceType>();
+            Collection<ChessPiece.PieceType> promotionPieces = new ArrayList<>();
             if (newRow == promotionRow) {
                 promotionPieces.add(ChessPiece.PieceType.QUEEN);
                 promotionPieces.add(ChessPiece.PieceType.BISHOP);

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 
 public class MemoryAuthDAO implements AuthDAO {
-    public static ArrayList<AuthData> Database = new ArrayList<>();
+    public static final ArrayList<AuthData> Database = new ArrayList<>();
 
     @Override
     public void clear() {

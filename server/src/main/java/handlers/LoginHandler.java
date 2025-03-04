@@ -15,7 +15,6 @@ public class LoginHandler implements Route {
         try {
             return new Gson().fromJson(request.body(), LoginRequest.class);
         } catch (Exception e) {
-            System.out.println(e);
             throw new InvalidRequestException(e.toString());
         }
     }

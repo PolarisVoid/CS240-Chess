@@ -29,8 +29,8 @@ public class ChessPosition {
                 ", Col=" + Col;
     }
 
-    private int Row;
-    private int Col;
+    private final int Row;
+    private final int Col;
     public ChessPosition(int row, int col) {
         this.Row = row;
         this.Col = col;

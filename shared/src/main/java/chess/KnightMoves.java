@@ -11,7 +11,7 @@ public class KnightMoves {
                 {-2, 1}, {2, 1}
         };
 
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         for (int[] Offset: Offsets) {

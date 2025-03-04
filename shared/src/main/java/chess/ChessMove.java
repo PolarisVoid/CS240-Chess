@@ -33,9 +33,9 @@ public class ChessMove {
                 '}';
     }
 
-    ChessPosition start;
-    ChessPosition end;
-    ChessPiece.PieceType promotion;
+    final ChessPosition start;
+    final ChessPosition end;
+    final ChessPiece.PieceType promotion;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
