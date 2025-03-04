@@ -14,9 +14,9 @@ public class ClearDatabaseServiceTests extends TestUtils {
         } catch (Exception e) {
             assert false;
         }
-        assert MemoryGameDAO.database.isEmpty();
+        assert MemoryGameDAO.DATABASE.isEmpty();
         assert MemoryGameDAO.counter == 1;
-        assert MemoryAuthDAO.database.isEmpty();
-        assert MemoryUserDAO.database.isEmpty();
+        assert MemoryAuthDAO.DATABASE.isEmpty();
+        assert MemoryUserDAO.DATABASE.isEmpty();
     }
 }

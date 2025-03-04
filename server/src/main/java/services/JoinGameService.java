@@ -1,6 +1,7 @@
 package services;
 
 import chess.ChessGame;
+import chess.ChessGame.TeamColor;
 import dataaccess.MemoryGameDAO;
 import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
@@ -10,14 +11,14 @@ import requests.JoinGameRequest;
 
 public class JoinGameService extends BaseService {
 
-    private static boolean validJoin(ChessGame.TeamColor playerColor, GameData game) {
+    private static boolean validJoin(TeamColor playerColor, GameData game) {
         switch (playerColor) {
-            case ChessGame.TeamColor.WHITE -> {
+            case TeamColor.WHITE -> {
                 if (game.whiteUsername() == null) {
                     return true;
                 }
             }
-            case ChessGame.TeamColor.BLACK -> {
+            case TeamColor.BLACK -> {
                 if (game.blackUsername() == null) {
                     return true;
                 }
@@ -42,9 +43,15 @@ public class JoinGameService extends BaseService {
             throw new AlreadyTakenException("Color already taken");
         }
 
+        int gameID = game.gameID();
+        String gameName = game.gameName();
+        String whiteUsername = game.whiteUsername();
+        String blackUsername = game.blackUsername();
+        ChessGame chessGame = game.game();
+
         switch (joinGameRequest.getPlayerColor()) {
-            case ChessGame.TeamColor.WHITE -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), authData.username(), game.blackUsername(), game.game());
-            case ChessGame.TeamColor.BLACK -> new MemoryGameDAO().updateGame(game.gameID(), game.gameName(), game.whiteUsername(), authData.username(), game.game());
+            case TeamColor.WHITE -> new MemoryGameDAO().updateGame(gameID, gameName, authData.username(), blackUsername, chessGame);
+            case TeamColor.BLACK -> new MemoryGameDAO().updateGame(gameID, gameName, whiteUsername, authData.username(), chessGame);
             default -> throw new InvalidRequestException("Couldn't Find Color");
         }
     }

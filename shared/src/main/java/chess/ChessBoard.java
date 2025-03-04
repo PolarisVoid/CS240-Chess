@@ -115,9 +115,9 @@ public class ChessBoard {
         addPiece(end, promotion);
     }
 
-    private void setupRow(int row, ChessPiece.PieceType[] Pieces, ChessGame.TeamColor color) {
+    private void setupRow(int row, ChessPiece.PieceType[] pieces, ChessGame.TeamColor color) {
         for (int i = 0; i < 8; ++i) {
-            this.board[row][i] = new ChessPiece(color, Pieces[i]);
+            this.board[row][i] = new ChessPiece(color, pieces[i]);
         }
     }
 

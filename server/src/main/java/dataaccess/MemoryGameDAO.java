@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MemoryGameDAO implements GameDAO {
-    public static final ArrayList<GameData> database = new ArrayList<>();
+    public static final ArrayList<GameData> DATABASE = new ArrayList<>();
     public static int counter = 1;
 
     @Override
     public void clear() {
-        database.clear();
+        DATABASE.clear();
         counter = 1;
     }
 
@@ -20,7 +20,7 @@ public class MemoryGameDAO implements GameDAO {
     public GameData createGame(String gameName) throws DataAccessException {
         try {
             GameData game = new GameData(counter, gameName, null, null, new ChessGame());
-            database.add(game);
+            DATABASE.add(game);
             counter += 1;
             return game;
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try {
-            for (GameData row : database) {
+            for (GameData row : DATABASE) {
                 if (Objects.equals(row.gameID(), gameID)) {
                     return row;
                 }
@@ -45,7 +45,7 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public ArrayList<GameData> listGames() throws DataAccessException {
         try {
-            return database;
+            return DATABASE;
         } catch (Exception e) {
             throw new DataAccessException("Could not retrive games.");
         }
@@ -54,8 +54,8 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void updateGame(int gameID, String gameName, String whiteUsername, String blackUsername, ChessGame game) throws DataAccessException {
         try {
-            database.removeIf(row -> Objects.equals(row.gameID(), gameID));
-            database.add(new GameData(gameID, gameName, whiteUsername, blackUsername, game));
+            DATABASE.removeIf(row -> Objects.equals(row.gameID(), gameID));
+            DATABASE.add(new GameData(gameID, gameName, whiteUsername, blackUsername, game));
         } catch (Exception e) {
             throw new DataAccessException("Could not update Game");
         }
