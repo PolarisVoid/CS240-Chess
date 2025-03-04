@@ -17,31 +17,31 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return TeamColor == that.TeamColor && Type == that.Type;
+        return teamColor == that.teamColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(TeamColor, Type);
+        return Objects.hash(teamColor, type);
     }
 
     @Override
     public String toString() {
         return "ChessPiece{" +
-                "TeamColor=" + TeamColor +
-                ", Type=" + Type +
+                "TeamColor=" + teamColor +
+                ", Type=" + type +
                 '}';
     }
 
     public ChessPiece copy() {
-        return new ChessPiece(TeamColor, Type);
+        return new ChessPiece(teamColor, type);
     }
 
-    private final ChessGame.TeamColor TeamColor;
-    private final ChessPiece.PieceType Type;
+    private final ChessGame.TeamColor teamColor;
+    private final ChessPiece.PieceType type;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.TeamColor = pieceColor;
-        this.Type = type;
+        this.teamColor = pieceColor;
+        this.type = type;
     }
 
     /**
@@ -60,14 +60,14 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return this.TeamColor;
+        return this.teamColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return this.Type;
+        return this.type;
     }
 
     /**
@@ -78,13 +78,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return switch (this.Type) {
-            case KING -> KingMoves.pieceMoves(board, myPosition, TeamColor);
-            case QUEEN -> QueenMoves.pieceMoves(board, myPosition, TeamColor);
-            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, TeamColor);
-            case ROOK -> RookMoves.pieceMoves(board, myPosition, TeamColor);
-            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, TeamColor);
-            case PAWN -> PawnMoves.pieceMoves(board, myPosition, TeamColor);
+        return switch (this.type) {
+            case KING -> KingMoves.pieceMoves(board, myPosition, teamColor);
+            case QUEEN -> QueenMoves.pieceMoves(board, myPosition, teamColor);
+            case BISHOP -> BishopMoves.pieceMoves(board, myPosition, teamColor);
+            case ROOK -> RookMoves.pieceMoves(board, myPosition, teamColor);
+            case KNIGHT -> KnightMoves.pieceMoves(board, myPosition, teamColor);
+            case PAWN -> PawnMoves.pieceMoves(board, myPosition, teamColor);
         };
     }
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class KingMoves {
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
-        int[][] Offsets = {
+        int[][] offsets = {
             {1, 0}, {0, 1}, {1, 1},
             {-1, 0}, {0, -1}, {-1, -1},
             {-1, 1}, {1, -1}
@@ -14,9 +14,9 @@ public class KingMoves {
         Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        for (int[] Offset: Offsets) {
-            int newRow = row + Offset[0];
-            int newCol = col + Offset[1];
+        for (int[] offset: offsets) {
+            int newRow = row + offset[0];
+            int newCol = col + offset[1];
             if (newRow > 8 || newRow < 1 || newCol > 8 || newCol < 1) {
                 continue;
             }

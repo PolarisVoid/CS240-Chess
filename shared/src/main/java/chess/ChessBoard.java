@@ -16,12 +16,12 @@ public class ChessBoard {
             return false;
         }
         ChessBoard that = (ChessBoard) o;
-        return Objects.deepEquals(Board, that.Board);
+        return Objects.deepEquals(board, that.board);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.deepHashCode(Board);
+        return Arrays.deepHashCode(board);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ChessBoard {
         for (int i = 0; i < 8; i++) {
             boardString.append(" {");
             for (int j = 0; j < 8; j++) {
-                boardString.append(" ").append(Board[i][j]);
+                boardString.append(" ").append(board[i][j]);
             }
             boardString.append(" }\n");
         }
@@ -42,29 +42,29 @@ public class ChessBoard {
     }
 
     public ChessBoard copy() {
-        return new ChessBoard(Board);
+        return new ChessBoard(board);
     }
 
-    private final ChessPiece[][] Board;
+    private final ChessPiece[][] board;
 
     public ChessBoard() {
-        this.Board = new ChessPiece[8][8];
+        this.board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                this.Board[i][j] = null;
+                this.board[i][j] = null;
             }
         }
     }
 
     public ChessBoard(ChessPiece[][] board) {
-        this.Board = new ChessPiece[8][8];
+        this.board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPiece piece = board[i][j];
                 if (piece == null) {
                     continue;
                 }
-                this.Board[i][j] = board[i][j].copy();
+                this.board[i][j] = board[i][j].copy();
             }
         }
     }
@@ -79,7 +79,7 @@ public class ChessBoard {
         if (1 > position.getRow() || 8 < position.getRow() || 1 > position.getColumn() || 8 < position.getColumn()){
             return;
         }
-        this.Board[8-position.getRow()][position.getColumn()-1] = piece;
+        this.board[8-position.getRow()][position.getColumn()-1] = piece;
     }
 
     /**
@@ -93,7 +93,7 @@ public class ChessBoard {
         if (1 > position.getRow() || 8 < position.getRow() || 1 > position.getColumn() || 8 < position.getColumn()){
             return null;
         }
-        return this.Board[8-position.getRow()][position.getColumn()-1];
+        return this.board[8-position.getRow()][position.getColumn()-1];
     }
 
     public void makeMove(ChessMove move) {
@@ -115,15 +115,15 @@ public class ChessBoard {
         addPiece(end, promotion);
     }
 
-    private void SetupRow(int row, ChessPiece.PieceType[] Pieces, ChessGame.TeamColor color) {
+    private void setupRow(int row, ChessPiece.PieceType[] Pieces, ChessGame.TeamColor color) {
         for (int i = 0; i < 8; ++i) {
-            this.Board[row][i] = new ChessPiece(color, Pieces[i]);
+            this.board[row][i] = new ChessPiece(color, Pieces[i]);
         }
     }
 
-    private void SetupEmptyRow(int row) {
+    private void setupEmptyRow(int row) {
         for (int i = 0; i < 8; ++i) {
-            this.Board[row][i] = null;
+            this.board[row][i] = null;
         }
     }
 
@@ -132,7 +132,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        ChessPiece.PieceType[] MainRow = {
+        ChessPiece.PieceType[] mainRow = {
             ChessPiece.PieceType.ROOK,
             ChessPiece.PieceType.KNIGHT,
             ChessPiece.PieceType.BISHOP,
@@ -142,7 +142,7 @@ public class ChessBoard {
             ChessPiece.PieceType.KNIGHT,
             ChessPiece.PieceType.ROOK
         };
-        ChessPiece.PieceType[] PawnRow = {
+        ChessPiece.PieceType[] pawnRow = {
             ChessPiece.PieceType.PAWN,
             ChessPiece.PieceType.PAWN,
             ChessPiece.PieceType.PAWN,
@@ -153,13 +153,13 @@ public class ChessBoard {
             ChessPiece.PieceType.PAWN,
         };
 
-        this.SetupRow(0, MainRow, ChessGame.TeamColor.BLACK);
-        this.SetupRow(1, PawnRow, ChessGame.TeamColor.BLACK);
-        this.SetupEmptyRow(2);
-        this.SetupEmptyRow(3);
-        this.SetupEmptyRow(4);
-        this.SetupEmptyRow(5);
-        this.SetupRow(6, PawnRow, ChessGame.TeamColor.WHITE);
-        this.SetupRow(7, MainRow, ChessGame.TeamColor.WHITE);
+        this.setupRow(0, mainRow, ChessGame.TeamColor.BLACK);
+        this.setupRow(1, pawnRow, ChessGame.TeamColor.BLACK);
+        this.setupEmptyRow(2);
+        this.setupEmptyRow(3);
+        this.setupEmptyRow(4);
+        this.setupEmptyRow(5);
+        this.setupRow(6, pawnRow, ChessGame.TeamColor.WHITE);
+        this.setupRow(7, mainRow, ChessGame.TeamColor.WHITE);
     }
 }

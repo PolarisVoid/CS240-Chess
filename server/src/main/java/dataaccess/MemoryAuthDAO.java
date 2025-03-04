@@ -8,11 +8,11 @@ import java.util.UUID;
 
 
 public class MemoryAuthDAO implements AuthDAO {
-    public static final ArrayList<AuthData> Database = new ArrayList<>();
+    public static final ArrayList<AuthData> database = new ArrayList<>();
 
     @Override
     public void clear() {
-        Database.clear();
+        database.clear();
     }
 
     @Override
@@ -20,7 +20,7 @@ public class MemoryAuthDAO implements AuthDAO {
         try {
             String authToken = UUID.randomUUID().toString();
             AuthData authData = new AuthData(authToken, username);
-            Database.add(authData);
+            database.add(authData);
             return authData;
         } catch (Exception e) {
             throw new DataAccessException("AuthToken could not be created.");
@@ -30,7 +30,7 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException{
         try {
-            for (AuthData row : Database) {
+            for (AuthData row : database) {
                 if (Objects.equals(row.authToken(), authToken)) {
                     return row;
                 }
@@ -44,9 +44,9 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void deleteAuth(String authToken) throws DataAccessException{
         try {
-            for (AuthData row : Database) {
+            for (AuthData row : database) {
                 if (Objects.equals(row.authToken(), authToken)) {
-                    Database.remove(row);
+                    database.remove(row);
                     return;
                 }
             }

@@ -1,57 +1,15 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.*;
 import model.GameData;
-import model.UserData;
 import org.junit.jupiter.api.*;
-import requests.CreateGameRequest;
 import requests.JoinGameRequest;
-import requests.RegisterRequest;
-import responses.CreateGameResponse;
-import responses.RegisterResponse;
-import services.CreateGameService;
 import services.JoinGameService;
-import services.RegisterService;
+
 
 import java.util.Objects;
 
-public class JoinGameServiceTests {
-    private static AuthDAO authDatabase;
-    private static GameDAO gameDatabase;
-    private static UserDAO userDatabase;
-
-    private static UserData user;
-    private static RegisterResponse userResponse;
-    private static CreateGameResponse gameResponse;
-
-
-    @BeforeAll
-    public static void init() {
-        authDatabase = new MemoryAuthDAO();
-        gameDatabase = new MemoryGameDAO();
-        userDatabase = new MemoryUserDAO();
-
-        user = new UserData("TestUser", "password", "test@test.com");
-    }
-
-    @BeforeEach
-    public void setup() {
-        authDatabase.clear();
-        gameDatabase.clear();
-        userDatabase.clear();
-
-        try {
-            userResponse = RegisterService.register(new RegisterRequest(user.username(), user.password(), user.email()));
-            CreateGameRequest createGameRequest = new CreateGameRequest("Game");
-            createGameRequest.setAuthToken(userResponse.getAuthToken());
-            gameResponse = CreateGameService.createGame(createGameRequest);
-        } catch (Exception e) {
-            System.out.println("Error");
-            assert false;
-        }
-    }
-
+public class JoinGameServiceTests extends TestUtils {
     @Test
     @Order(1)
     @DisplayName("Valid Join Game")

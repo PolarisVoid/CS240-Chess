@@ -73,10 +73,10 @@ public class ChessGame {
         }
 
         int direction = (oppColor == TeamColor.WHITE) ? -1: 1;
-        int[][] Offsets = {{direction, -1}, {direction, 1}};
+        int[][] offsets = {{direction, -1}, {direction, 1}};
 
-        for (int[] Offset: Offsets) {
-            ChessPiece piece = board.getPiece(new ChessPosition(kingLocation.getRow() + Offset[0], kingLocation.getColumn() + Offset[1]));
+        for (int[] offset: offsets) {
+            ChessPiece piece = board.getPiece(new ChessPosition(kingLocation.getRow() + offset[0], kingLocation.getColumn() + offset[1]));
             if (piece == null) {
                 continue;
             }
@@ -89,10 +89,10 @@ public class ChessGame {
             return true;
         }
 
-        Offsets = new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+        offsets = new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
-        for (int[] Offset: Offsets) {
-            ChessPiece piece = board.getPiece(new ChessPosition(kingLocation.getRow() + Offset[0], kingLocation.getColumn() + Offset[1]));
+        for (int[] offset: offsets) {
+            ChessPiece piece = board.getPiece(new ChessPosition(kingLocation.getRow() + offset[0], kingLocation.getColumn() + offset[1]));
             if (piece == null) {
                 continue;
             }

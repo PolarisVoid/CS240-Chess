@@ -15,25 +15,25 @@ public class ChessPosition {
             return false;
         }
         ChessPosition that = (ChessPosition) o;
-        return Row == that.Row && Col == that.Col;
+        return row == that.row && col == that.col;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Row, Col);
+        return Objects.hash(row, col);
     }
 
     @Override
     public String toString() {
-        return  "Row=" + Row +
-                ", Col=" + Col;
+        return  "Row=" + row +
+                ", Col=" + col;
     }
 
-    private final int Row;
-    private final int Col;
+    private final int row;
+    private final int col;
     public ChessPosition(int row, int col) {
-        this.Row = row;
-        this.Col = col;
+        this.row = row;
+        this.col = col;
     }
 
     /**
@@ -41,7 +41,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        return this.Row;
+        return this.row;
     }
 
     /**
@@ -49,6 +49,6 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() {
-        return this.Col;
+        return this.col;
     }
 }

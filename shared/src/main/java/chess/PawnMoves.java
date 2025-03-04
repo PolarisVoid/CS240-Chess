@@ -17,14 +17,14 @@ public class PawnMoves {
         return moves;
     }
 
-    private static Collection<ChessMove> getPawnMoves(int startRow, int promotionRow, int[][] Offsets, ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
+    private static Collection<ChessMove> getPawnMoves(int startRow, int promotionRow, int[][] offsets, ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color) {
         Collection<ChessMove> moves = new ArrayList<>();
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        for (int[] Offset: Offsets) {
-            int newRow = row + Offset[0];
-            int newCol = col + Offset[1];
+        for (int[] offset: offsets) {
+            int newRow = row + offset[0];
+            int newCol = col + offset[1];
             if (newRow > 8 || newRow < 1 || newCol > 8 || newCol < 1) {
                 continue;
             }
@@ -38,21 +38,21 @@ public class PawnMoves {
             }
             ChessPiece proposedMove = board.getPiece(new ChessPosition(newRow, newCol));
             if (proposedMove != null) {
-                if (proposedMove.getTeamColor() != color && Offset[1] != 0) {
+                if (proposedMove.getTeamColor() != color && offset[1] != 0) {
                     moves.addAll(generateMoves(myPosition, new ChessPosition(newRow, newCol), promotionPieces));
                 }
                 continue;
             }
 
-            if (Offset[1] != 0) {
+            if (offset[1] != 0) {
                 continue;
             }
 
-            if(Offset[0] == Offsets[1][0]) {
+            if(offset[0] == offsets[1][0]) {
                 if (startRow != row) {
                     continue;
                 }
-                if (board.getPiece(new ChessPosition(row + Offsets[0][0], col)) == null) {
+                if (board.getPiece(new ChessPosition(row + offsets[0][0], col)) == null) {
                     moves.addAll(generateMoves(myPosition, new ChessPosition(newRow, newCol), promotionPieces));
                 }
                 continue;
