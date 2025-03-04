@@ -34,4 +34,5 @@ public class RegisterServiceTests extends TestUtils {
             assert true;
         }
     }
+
 }
