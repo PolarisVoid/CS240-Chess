@@ -32,4 +32,8 @@ public class GetGameResponse {
     public void insertGame(GameData game) {
         games.add(game);
     }
+
+    public ArrayList<GameData> getGames() {
+        return games;
+    }
 }
