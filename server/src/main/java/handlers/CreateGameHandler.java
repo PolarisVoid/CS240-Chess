@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
 import requests.CreateGameRequest;
-import services.CreateGameService;
+import service.CreateGameService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
