@@ -27,7 +27,7 @@ public class DatabaseAuthDAO implements AuthDAO {
         return "DELETE FROM AUTH WHERE AUTHTOKEN = ?";
     }
 
-    public AuthData processGetAuth(ResultSet rs) {
+    private AuthData processGetAuth(ResultSet rs) {
         try {
             if (rs.next()) {
                 return new AuthData(

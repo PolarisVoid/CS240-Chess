@@ -33,19 +33,15 @@ public class DatabaseGameDAO implements GameDAO {
         return "UPDATE GAME SET GAMENAME = ?, WHITEUSERNAME = ?, BLACKUSERNAME = ?, GAME = ? WHERE GAMEID = ?";
     }
 
-    public GameData processGetGame(ResultSet rs) {
+    private GameData processGetGame(ResultSet rs) {
         try {
             if (rs.next()) {
-                String str = rs.getString("GAME");
-                System.out.println(str.length());
-                ChessGame chessGame = new Gson().fromJson(str, ChessGame.class);
-                System.out.println(chessGame);
                 return new GameData(
                         rs.getInt("GAMEID"),
                         rs.getString("GAMENAME"),
                         rs.getString("WHITEUSERNAME"),
                         rs.getString("BLACKUSERNAME"),
-                        chessGame
+                        new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
                 );
             }
             return null;
@@ -54,20 +50,16 @@ public class DatabaseGameDAO implements GameDAO {
         }
     }
 
-    public ArrayList<GameData> processGetGames(ResultSet rs) {
+    private ArrayList<GameData> processGetGames(ResultSet rs) {
         try {
             ArrayList<GameData> games = new ArrayList<>();
             while (rs.next()) {
-                String str = rs.getString("GAME");
-                System.out.println(str.length());
-                ChessGame chessGame = new Gson().fromJson(str, ChessGame.class);
-                System.out.println(chessGame);
                 games.add(new GameData(
                         rs.getInt("GAMEID"),
                         rs.getString("GAMENAME"),
                         rs.getString("WHITEUSERNAME"),
                         rs.getString("BLACKUSERNAME"),
-                        chessGame
+                        new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
                 ));
             }
             return games;
@@ -96,8 +88,6 @@ public class DatabaseGameDAO implements GameDAO {
     @Override
     public void updateGame(int gameID, String gameName, String whiteUsername, String blackUsername, ChessGame game) throws DataAccessException {
         String boardEncoding = new Gson().toJson(game);
-        System.out.println(boardEncoding);
-        DatabaseManager.executeUpdate(updateGameQuery(), gameID, gameName, whiteUsername, blackUsername, boardEncoding);
-        System.out.println("Updated Game");
+        DatabaseManager.executeUpdate(updateGameQuery(), gameName, whiteUsername, blackUsername, boardEncoding, gameID);
     }
 }

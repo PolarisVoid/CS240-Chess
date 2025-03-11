@@ -28,7 +28,7 @@ public class DatabaseUserDAO implements UserDAO {
         return "SELECT * FROM USER WHERE USERNAME = ?";
     }
 
-    public UserData processGetUser(ResultSet rs) {
+    private UserData processGetUser(ResultSet rs) {
         try {
             if (rs.next()) {
                 return new UserData(
