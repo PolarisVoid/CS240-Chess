@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import dataaccess.*;
 import exceptions.UnathorizedException;

@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import exceptions.UnathorizedException;
 import model.AuthData;

@@ -3,7 +3,6 @@ package service;
 import dataaccess.*;
 import org.junit.jupiter.api.*;
 import requests.LogoutRequest;
-import services.LogoutService;
 
 public class LogoutServiceTests extends TestUtils {
     @Test

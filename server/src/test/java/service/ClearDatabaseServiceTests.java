@@ -2,7 +2,6 @@ package service;
 
 import dataaccess.*;
 import org.junit.jupiter.api.*;
-import services.ClearDatabaseService;
 
 public class ClearDatabaseServiceTests extends TestUtils {
     @Test

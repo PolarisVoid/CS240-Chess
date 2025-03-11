@@ -3,7 +3,7 @@ package handlers;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
 import requests.LogoutRequest;
-import services.LogoutService;
+import service.LogoutService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

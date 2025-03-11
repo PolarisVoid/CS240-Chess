@@ -3,7 +3,6 @@ package service;
 import org.junit.jupiter.api.*;
 import requests.GetGameRequest;
 import responses.GetGameResponse;
-import services.GetGameService;
 
 public class GetGameServiceTests extends TestUtils {
     @Test

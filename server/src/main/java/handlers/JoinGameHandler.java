@@ -5,7 +5,7 @@ import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
 import requests.JoinGameRequest;
-import services.JoinGameService;
+import service.JoinGameService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

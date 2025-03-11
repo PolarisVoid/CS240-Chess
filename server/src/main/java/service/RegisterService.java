@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import exceptions.AlreadyTakenException;
 import model.AuthData;

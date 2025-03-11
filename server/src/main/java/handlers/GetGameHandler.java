@@ -3,7 +3,7 @@ package handlers;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
 import requests.GetGameRequest;
-import services.GetGameService;
+import service.GetGameService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

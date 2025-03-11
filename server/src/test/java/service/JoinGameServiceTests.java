@@ -4,7 +4,6 @@ import chess.ChessGame;
 import model.GameData;
 import org.junit.jupiter.api.*;
 import requests.JoinGameRequest;
-import services.JoinGameService;
 
 
 import java.util.Objects;

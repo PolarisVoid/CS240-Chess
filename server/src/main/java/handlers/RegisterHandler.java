@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import exceptions.AlreadyTakenException;
 import exceptions.InvalidRequestException;
 import requests.RegisterRequest;
-import services.RegisterService;
+import service.RegisterService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

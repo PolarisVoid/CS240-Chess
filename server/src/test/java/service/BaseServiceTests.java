@@ -4,7 +4,6 @@ import dataaccess.*;
 import exceptions.UnathorizedException;
 import model.AuthData;
 import org.junit.jupiter.api.*;
-import services.BaseService;
 
 public class BaseServiceTests extends TestUtils {
     @Test

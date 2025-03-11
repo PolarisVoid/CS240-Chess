@@ -3,7 +3,6 @@ package service;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import requests.RegisterRequest;
-import services.RegisterService;
 
 
 public class RegisterServiceTests extends TestUtils {

@@ -8,8 +8,6 @@ import requests.CreateGameRequest;
 import requests.RegisterRequest;
 import responses.CreateGameResponse;
 import responses.RegisterResponse;
-import services.CreateGameService;
-import services.RegisterService;
 
 public class TestUtils {
     public static AuthDAO authDatabase;
@@ -20,21 +18,20 @@ public class TestUtils {
     public static RegisterResponse userResponse;
     public static CreateGameResponse gameResponse;
 
-
     @BeforeAll
     public static void init() {
-        authDatabase = new MemoryAuthDAO();
-        gameDatabase = new MemoryGameDAO();
-        userDatabase = new MemoryUserDAO();
+        authDatabase = new DatabaseAuthDAO();
+        gameDatabase = new DatabaseGameDAO();
+        userDatabase = new DatabaseUserDAO();
 
         user = new UserData("TestUser", "password", "test@test.com");
     }
 
     @BeforeEach
     public void setup() {
+        userDatabase.clear();
         authDatabase.clear();
         gameDatabase.clear();
-        userDatabase.clear();
 
         try {
             userResponse = RegisterService.register(new RegisterRequest(user.username(), user.password(), user.email()));
@@ -42,7 +39,7 @@ public class TestUtils {
             createGameRequest.setAuthToken(userResponse.getAuthToken());
             gameResponse = CreateGameService.createGame(createGameRequest);
         } catch (Exception e) {
-            System.out.println("Error");
+            System.out.println(e.getMessage());
             assert false;
         }
     }

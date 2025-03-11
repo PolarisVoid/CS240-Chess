@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import chess.ChessGame;
 import chess.ChessGame.TeamColor;

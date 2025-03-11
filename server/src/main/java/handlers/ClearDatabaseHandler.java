@@ -1,6 +1,6 @@
 package handlers;
 
-import services.ClearDatabaseService;
+import service.ClearDatabaseService;
 import spark.Request;
 import spark.Response;
 import spark.Route;

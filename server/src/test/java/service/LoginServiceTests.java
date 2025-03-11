@@ -3,7 +3,6 @@ package service;
 import org.junit.jupiter.api.*;
 import requests.LoginRequest;
 import responses.LoginResponse;
-import services.LoginService;
 
 import java.util.Objects;
 
