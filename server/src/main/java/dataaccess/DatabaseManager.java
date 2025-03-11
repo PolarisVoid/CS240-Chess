@@ -55,25 +55,25 @@ public class DatabaseManager {
     static void createTables() throws DataAccessException {
         try {
             var userTable = """
-                    CREATE TABLE IF NOT EXISTS User (
-                        Username VARCHAR(50) PRIMARY KEY,
-                        Password VARCHAR(255) NOT NULL,
-                        Email VARCHAR(100) UNIQUE NOT NULL
+                    CREATE TABLE IF NOT EXISTS USER (
+                        USERNAME VARCHAR(50) PRIMARY KEY,
+                        PASSWORD VARCHAR(255) NOT NULL,
+                        EMAIL VARCHAR(100) UNIQUE NOT NULL
                     )""";
             var authTable = """
-                    CREATE TABLE IF NOT EXISTS Auth (
-                        AuthToken VARCHAR(100) PRIMARY KEY,
-                        Username VARCHAR(50) NOT NULL,
-                        FOREIGN KEY (Username) REFERENCES User(Username) ON DELETE CASCADE
+                    CREATE TABLE IF NOT EXISTS AUTH (
+                        AUTHTOKEN VARCHAR(100) PRIMARY KEY,
+                        USERNAME VARCHAR(50) NOT NULL,
+                        FOREIGN KEY (Username) REFERENCES USER(USERNAME) ON DELETE CASCADE
                     )
                     """;
             var gameTable = """
-                    CREATE TABLE IF NOT EXISTS Game (
+                    CREATE TABLE IF NOT EXISTS GAME (
                         GAMEID INT AUTO_INCREMENT PRIMARY KEY,
-                        GameName VARCHAR(100) NOT NULL,
-                        WhiteUsername VARCHAR(50),
-                        BlackUsername VARCHAR(50),
-                        Game JSON NOT NULL
+                        GAMENAME VARCHAR(100) NOT NULL,
+                        WHITEUSERNAME VARCHAR(50),
+                        BLACKUSERNAME VARCHAR(50),
+                        GAME JSON NOT NULL
                     )
                     """;
             var conn = getConnection();
