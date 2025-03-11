@@ -8,7 +8,11 @@ import java.util.ArrayList;
 public class DatabaseGameDAO implements GameDAO {
     @Override
     public void clear() {
-
+        try {
+            DatabaseManager.truncateTable("GAME");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
