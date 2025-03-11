@@ -29,12 +29,12 @@ public class DatabaseUserDAO implements UserDAO {
         return "SELECT * FROM USER WHERE USERNAME = ?";
     }
 
-    public UserData processUser(ResultSet rs) throws SQLException {
+    public UserData processGetUser(ResultSet rs) throws SQLException {
         if (rs.next()) {
             return new UserData(
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getString("email")
+                    rs.getString("USERNAME"),
+                    rs.getString("PASSWORD"),
+                    rs.getString("EMAIL")
             );
         }
         return null;
@@ -42,14 +42,12 @@ public class DatabaseUserDAO implements UserDAO {
 
     @Override
     public UserData createUser(String username, String password, String email) throws DataAccessException {
-        String query = createUserQuery();
-        int user = DatabaseManager.executeUpdate(query, username, hashPassword(password), email);
+        int user = DatabaseManager.executeUpdate(createUserQuery(), username, hashPassword(password), email);
         return (user > 0) ? getUser(username) : null;
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        String query = getUserQuery();
-        return DatabaseManager.executeQuery(query, this::processUser, username);
+        return DatabaseManager.executeQuery(getUserQuery(), this::processGetUser, username);
     }
 }
