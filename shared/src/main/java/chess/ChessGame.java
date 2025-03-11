@@ -1,5 +1,7 @@
 package chess;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -18,6 +20,13 @@ public class ChessGame {
         board = new ChessBoard();
         board.resetBoard();
         nextTurn = TeamColor.WHITE;
+    }
+
+    public ChessGame(String rawJson) {
+        Gson gson = new Gson();
+        ChessGame chessGame = gson.fromJson(rawJson, ChessGame.class);
+        this.nextTurn = chessGame.nextTurn;
+        this.board = chessGame.board;
     }
 
     /**
