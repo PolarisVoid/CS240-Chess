@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import model.GameData;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DatabaseGameDAO implements GameDAO {
@@ -34,37 +33,45 @@ public class DatabaseGameDAO implements GameDAO {
         return "UPDATE GAME SET GAMENAME = ?, WHITEUSERNAME = ?, BLACKUSERNAME = ?, GAME = ? WHERE GAMEID = ?";
     }
 
-    public GameData processGetGame(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return new GameData(
-                    rs.getInt("GAMEID"),
-                    rs.getString("GAMENAME"),
-                    rs.getString("WHITEUSERNAME"),
-                    rs.getString("BLACKUSERNAME"),
-                    new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
-            );
+    public GameData processGetGame(ResultSet rs) {
+        try {
+            if (rs.next()) {
+                return new GameData(
+                        rs.getInt("GAMEID"),
+                        rs.getString("GAMENAME"),
+                        rs.getString("WHITEUSERNAME"),
+                        rs.getString("BLACKUSERNAME"),
+                        new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
+                );
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
-    public ArrayList<GameData> processGetGames(ResultSet rs) throws SQLException {
-        ArrayList<GameData> games = new ArrayList<>();
-        while (rs.next()) {
-            games.add(new GameData(
-                    rs.getInt("GAMEID"),
-                    rs.getString("GAMENAME"),
-                    rs.getString("WHITEUSERNAME"),
-                    rs.getString("BLACKUSERNAME"),
-                    new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
-            ));
+    public ArrayList<GameData> processGetGames(ResultSet rs) {
+        try {
+            ArrayList<GameData> games = new ArrayList<>();
+            while (rs.next()) {
+                games.add(new GameData(
+                        rs.getInt("GAMEID"),
+                        rs.getString("GAMENAME"),
+                        rs.getString("WHITEUSERNAME"),
+                        rs.getString("BLACKUSERNAME"),
+                        new Gson().fromJson(rs.getString("GAME"), ChessGame.class)
+                ));
+            }
+            return games;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return games;
     }
 
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
         String boardEncoding = new Gson().toJson(new ChessGame());
-        int gameID = DatabaseManager.executeInsert(createGameQuery(), gameName, "", "", boardEncoding);
+        int gameID = DatabaseManager.executeInsert(createGameQuery(), gameName, null, null, boardEncoding);
         return (gameID > -1) ? getGame(gameID) : null;
     }
 

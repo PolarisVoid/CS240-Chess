@@ -4,7 +4,6 @@ import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DatabaseUserDAO implements UserDAO {
 
@@ -29,15 +28,19 @@ public class DatabaseUserDAO implements UserDAO {
         return "SELECT * FROM USER WHERE USERNAME = ?";
     }
 
-    public UserData processGetUser(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return new UserData(
-                    rs.getString("USERNAME"),
-                    rs.getString("PASSWORD"),
-                    rs.getString("EMAIL")
-            );
+    public UserData processGetUser(ResultSet rs) {
+        try {
+            if (rs.next()) {
+                return new UserData(
+                        rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getString("EMAIL")
+                );
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override

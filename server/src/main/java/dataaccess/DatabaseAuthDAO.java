@@ -3,7 +3,6 @@ package dataaccess;
 import model.AuthData;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class DatabaseAuthDAO implements AuthDAO {
@@ -28,14 +27,18 @@ public class DatabaseAuthDAO implements AuthDAO {
         return "DELETE FROM AUTH WHERE AUTHTOKEN = ?";
     }
 
-    public AuthData processGetAuth(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            return new AuthData(
-                    rs.getString("AUTHTOKEN"),
-                    rs.getString("USERNAME")
-            );
+    public AuthData processGetAuth(ResultSet rs) {
+        try {
+            if (rs.next()) {
+                return new AuthData(
+                        rs.getString("AUTHTOKEN"),
+                        rs.getString("USERNAME")
+                );
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
