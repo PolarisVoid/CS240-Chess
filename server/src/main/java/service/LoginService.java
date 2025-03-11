@@ -11,7 +11,7 @@ public class LoginService extends BaseService {
 
     public static LoginResponse login(LoginRequest loginRequest) throws Exception {
         UserData user;
-        user = userDAO.getUser(loginRequest.getUsername());
+        user = USER_DAO.getUser(loginRequest.getUsername());
 
         if (user == null) {
             throw new UnathorizedException("User not found");
@@ -21,7 +21,7 @@ public class LoginService extends BaseService {
             throw new UnathorizedException("Incorrect Password");
         }
 
-        AuthData authData = authDAO.createAuth(user.username());
+        AuthData authData = AUTH_DAO.createAuth(user.username());
         return new LoginResponse(user.username(), authData.authToken());
     }
 }

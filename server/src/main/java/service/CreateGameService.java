@@ -8,7 +8,7 @@ public class CreateGameService extends BaseService {
 
     public static CreateGameResponse createGame(CreateGameRequest createGameRequest) throws Exception {
         authenticate(createGameRequest.getAuthToken());
-        GameData game = gameDAO.createGame(createGameRequest.getGameName());
+        GameData game = GAME_DAO.createGame(createGameRequest.getGameName());
 
         if (game == null) {
             throw new Exception("Game was not created");

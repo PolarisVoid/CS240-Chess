@@ -32,7 +32,7 @@ public class JoinGameService extends BaseService {
     public static void joinGame(JoinGameRequest joinGameRequest) throws Exception {
         AuthData authData = authenticate(joinGameRequest.getAuthToken());
 
-        GameData game = gameDAO.getGame(joinGameRequest.getGameID());
+        GameData game = GAME_DAO.getGame(joinGameRequest.getGameID());
 
         if (game == null) {
             throw new InvalidRequestException("Game does not Exists");
@@ -49,8 +49,8 @@ public class JoinGameService extends BaseService {
         ChessGame chessGame = game.game();
 
         switch (joinGameRequest.getPlayerColor()) {
-            case TeamColor.WHITE -> gameDAO.updateGame(gameID, gameName, authData.username(), blackUsername, chessGame);
-            case TeamColor.BLACK -> gameDAO.updateGame(gameID, gameName, whiteUsername, authData.username(), chessGame);
+            case TeamColor.WHITE -> GAME_DAO.updateGame(gameID, gameName, authData.username(), blackUsername, chessGame);
+            case TeamColor.BLACK -> GAME_DAO.updateGame(gameID, gameName, whiteUsername, authData.username(), chessGame);
             default -> throw new InvalidRequestException("Couldn't Find Color");
         }
     }

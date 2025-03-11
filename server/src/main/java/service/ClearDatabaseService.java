@@ -3,8 +3,8 @@ package service;
 public class ClearDatabaseService extends BaseService {
 
     public static void clearDatabase() {
-        userDAO.clear();
-        gameDAO.clear();
-        authDAO.clear();
+        USER_DAO.clear();
+        GAME_DAO.clear();
+        AUTH_DAO.clear();
     }
 }

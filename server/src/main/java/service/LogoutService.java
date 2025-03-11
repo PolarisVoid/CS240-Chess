@@ -8,6 +8,6 @@ public class LogoutService extends BaseService {
 
     public static void logout(LogoutRequest logoutRequest) throws UnathorizedException, DataAccessException {
         authenticate(logoutRequest.getAuthToken());
-        authDAO.deleteAuth(logoutRequest.getAuthToken());
+        AUTH_DAO.deleteAuth(logoutRequest.getAuthToken());
     }
 }
