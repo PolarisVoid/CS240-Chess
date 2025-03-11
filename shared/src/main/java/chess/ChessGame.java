@@ -22,13 +22,6 @@ public class ChessGame {
         nextTurn = TeamColor.WHITE;
     }
 
-    public ChessGame(String rawJson) {
-        Gson gson = new Gson();
-        ChessGame chessGame = gson.fromJson(rawJson, ChessGame.class);
-        this.nextTurn = chessGame.nextTurn;
-        this.board = chessGame.board;
-    }
-
     /**
      * @return Which team's turn it is
      */

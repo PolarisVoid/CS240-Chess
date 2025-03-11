@@ -28,6 +28,9 @@ public class DatabaseManager {
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 CONNECTION_URL = String.format("jdbc:mysql://%s:%d", host, port);
+
+                createDatabase();
+                createTables();
             }
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
@@ -45,6 +48,46 @@ public class DatabaseManager {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    static void createTables() throws DataAccessException {
+        try {
+            var userTable = """
+                    CREATE TABLE IF NOT EXISTS User (
+                        Username VARCHAR(50) PRIMARY KEY,
+                        Password VARCHAR(255) NOT NULL,
+                        Email VARCHAR(100) UNIQUE NOT NULL
+                    )""";
+            var authTable = """
+                    CREATE TABLE IF NOT EXISTS Auth (
+                        AuthToken VARCHAR(100) PRIMARY KEY,
+                        Username VARCHAR(50) NOT NULL,
+                        FOREIGN KEY (Username) REFERENCES User(Username) ON DELETE CASCADE
+                    )
+                    """;
+            var gameTable = """
+                    CREATE TABLE IF NOT EXISTS Game (
+                        GAMEID INT AUTO_INCREMENT PRIMARY KEY,
+                        GameName VARCHAR(100) NOT NULL,
+                        WhiteUsername VARCHAR(50),
+                        BlackUsername VARCHAR(50),
+                        Game JSON
+                    )
+                    """;
+            var conn = getConnection();
+            try (var preparedStatement = conn.prepareStatement(userTable)) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(authTable)) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(gameTable)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new DataAccessException(e.getMessage());
         }
     }
@@ -72,27 +115,19 @@ public class DatabaseManager {
     }
 
     static void truncateTable(String tableName) throws DataAccessException {
-        String query = "TRUNCATE TABLE " + tableName.toUpperCase();
-
-        try (var conn = getConnection()) {
-            try (var preparedStatement = conn.prepareStatement(query)) {
-                preparedStatement.execute();
-            }
-        } catch (Exception e) {
-            throw new DataAccessException(e.getMessage());
-        }
+        executeUpdate("DELETE FROM " + tableName.toUpperCase());
+        executeUpdate("ALTER TABLE " + tableName.toUpperCase() + " AUTO_INCREMENT = 0");
     }
 
     static int executeUpdate(String query, Object... params) throws DataAccessException {
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement(query)) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setObject(i + 1, params[i]);
+                if (params.length > 0) {
+                    for (int i = 0; i < params.length; i++) {
+                        preparedStatement.setObject(i + 1, params[i]);
+                    }
                 }
-
-                int result = preparedStatement.executeUpdate();
-                conn.commit();
-                return result;
+                return preparedStatement.executeUpdate();
             }
         } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
@@ -101,13 +136,13 @@ public class DatabaseManager {
 
     static int executeInsert(String query, Object... params) throws DataAccessException {
         try (var conn = getConnection()) {
-            try (var preparedStatement = conn.prepareStatement(query)) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setObject(i + 1, params[i]);
+            try (var preparedStatement = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                if (params.length > 0) {
+                    for (int i = 0; i < params.length; i++) {
+                        preparedStatement.setObject(i + 1, params[i]);
+                    }
                 }
-
                 preparedStatement.executeUpdate();
-                conn.commit();
                 try (var keys = preparedStatement.getGeneratedKeys()) {
                     return keys.next() ? keys.getInt(1) : -1;
                 }
@@ -120,14 +155,14 @@ public class DatabaseManager {
     static <T> T executeQuery(String query, Function<ResultSet, T> handler, Object... params) throws DataAccessException {
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement(query)) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setObject(i + 1, params[i]);
+                if (params.length > 0) {
+                    for (int i = 0; i < params.length; i++) {
+                        preparedStatement.setObject(i + 1, params[i]);
+                    }
                 }
 
                 var rs = preparedStatement.executeQuery();
-                T result = handler.apply(rs);
-                conn.commit();
-                return result;
+                return handler.apply(rs);
             }
         } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
