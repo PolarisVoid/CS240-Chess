@@ -73,7 +73,7 @@ public class DatabaseManager {
                         GameName VARCHAR(100) NOT NULL,
                         WhiteUsername VARCHAR(50),
                         BlackUsername VARCHAR(50),
-                        Game JSON
+                        Game JSON NOT NULL
                     )
                     """;
             var conn = getConnection();
