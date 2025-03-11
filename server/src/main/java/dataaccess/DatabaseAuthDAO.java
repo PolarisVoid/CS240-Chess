@@ -5,7 +5,11 @@ import model.AuthData;
 public class DatabaseAuthDAO implements AuthDAO {
     @Override
     public void clear() {
-
+        try {
+            DatabaseManager.truncateTable("AUTH");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
