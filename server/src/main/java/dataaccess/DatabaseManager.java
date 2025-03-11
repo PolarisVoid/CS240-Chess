@@ -99,6 +99,24 @@ public class DatabaseManager {
         }
     }
 
+    static int executeInsert(String query, Object... params) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(query)) {
+                for (int i = 0; i < params.length; i++) {
+                    preparedStatement.setObject(i + 1, params[i]);
+                }
+
+                preparedStatement.executeUpdate();
+                conn.commit();
+                try (var keys = preparedStatement.getGeneratedKeys()) {
+                    return keys.next() ? keys.getInt(1) : -1;
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
     static <T> T executeQuery(String query, Function<ResultSet, T> handler, Object... params) throws DataAccessException {
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement(query)) {
