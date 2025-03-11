@@ -2,6 +2,7 @@ package dataaccess;
 
 import java.sql.*;
 import java.util.Properties;
+import java.util.function.Function;
 
 public class DatabaseManager {
     private static final String DATABASE_NAME;
@@ -66,6 +67,51 @@ public class DatabaseManager {
             conn.setCatalog(DATABASE_NAME);
             return conn;
         } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    static void truncateTable(String tableName) throws DataAccessException {
+        String query = "TRUNCATE TABLE " + tableName.toUpperCase();
+
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(query)) {
+                preparedStatement.execute();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    static int executeUpdate(String query, Object... params) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(query)) {
+                for (int i = 0; i < params.length; i++) {
+                    preparedStatement.setObject(i + 1, params[i]);
+                }
+
+                int result = preparedStatement.executeUpdate();
+                conn.commit();
+                return result;
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    static <T> T executeQuery(String query, Function<ResultSet, T> handler, Object... params) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(query)) {
+                for (int i = 0; i < params.length; i++) {
+                    preparedStatement.setObject(i + 1, params[i]);
+                }
+
+                var rs = preparedStatement.executeQuery();
+                T result = handler.apply(rs);
+                conn.commit();
+                return result;
+            }
+        } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
         }
     }
