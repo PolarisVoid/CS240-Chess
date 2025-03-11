@@ -1,7 +1,6 @@
 package services;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryGameDAO;
 import exceptions.UnathorizedException;
 import model.GameData;
 import requests.GetGameRequest;
@@ -14,7 +13,7 @@ public class GetGameService extends BaseService {
     public static GetGameResponse getGames(GetGameRequest getGameRequest) throws UnathorizedException, DataAccessException {
         authenticate(getGameRequest.getAuthToken());
 
-        ArrayList<GameData> games = new MemoryGameDAO().listGames();
+        ArrayList<GameData> games = gameDAO.listGames();
         GetGameResponse response = new GetGameResponse();
         for (GameData game: games) {
             response.insertGame(game);
