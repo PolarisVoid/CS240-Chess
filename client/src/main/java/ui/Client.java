@@ -281,7 +281,7 @@ public class Client {
             return;
         } catch (BadRequest e) {
             System.out.println("Bad User Input. Please fill in all fields with valid values.");
-
+            return;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;

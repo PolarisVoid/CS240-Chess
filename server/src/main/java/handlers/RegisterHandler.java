@@ -9,15 +9,20 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Objects;
+
 public class RegisterHandler implements Route {
 
     private RegisterRequest createRequest(Request request) throws InvalidRequestException {
         try {
             RegisterRequest registerRequest = new Gson().fromJson(request.body(), RegisterRequest.class);
-            if (registerRequest.getPassword() == null || registerRequest.getUsername() == null || registerRequest.getEmail() == null) {
+            if (registerRequest.getPassword() == null || Objects.equals(registerRequest.getPassword(), "")) {
                 throw new InvalidRequestException("Missing Information");
             }
-            if (registerRequest.getPassword() == "" || registerRequest.getUsername() == "" || registerRequest.getEmail() == "") {
+            if (registerRequest.getUsername() == null || Objects.equals(registerRequest.getUsername(), "")) {
+                throw new InvalidRequestException("Missing Information");
+            }
+            if (registerRequest.getEmail() == null || Objects.equals(registerRequest.getEmail(), "")) {
                 throw new InvalidRequestException("Missing Information");
             }
             return registerRequest;
