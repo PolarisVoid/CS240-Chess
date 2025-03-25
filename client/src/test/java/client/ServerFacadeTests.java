@@ -48,7 +48,7 @@ public class ServerFacadeTests {
 
         try {
             String email = "test@email.com";
-            authData = serverFacade.Register(USERNAME, PASSWORD, email);
+            authData = serverFacade.register(USERNAME, PASSWORD, email);
         } catch (Exception ignore) {}
     }
 
@@ -56,7 +56,7 @@ public class ServerFacadeTests {
     @DisplayName("Valid Login")
     public void positiveLogin() {
         try {
-            AuthData authData = serverFacade.Login(USERNAME, PASSWORD);
+            AuthData authData = serverFacade.login(USERNAME, PASSWORD);
             assert true;
             assert authData.authToken() != null;
             assert authData.username() != null;
@@ -69,7 +69,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Login")
     public void negativeLogin() {
         try {
-            serverFacade.Login("Fake user", PASSWORD);
+            serverFacade.login("Fake user", PASSWORD);
             assert false;
         } catch (Exception e) {
             assert true;
@@ -80,7 +80,7 @@ public class ServerFacadeTests {
     @DisplayName("Valid Register")
     public void positiveRegister() {
         try {
-            AuthData authData = serverFacade.Register("Random User", "fake", "test");
+            AuthData authData = serverFacade.register("Random User", "fake", "test");
             assert true;
             assert authData != null;
             assert authData.username() != null;
@@ -94,7 +94,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Register")
     public void negativeRegister() {
         try {
-            serverFacade.Register(USERNAME, "", "");
+            serverFacade.register(USERNAME, "", "");
             assert false;
         } catch (Exception e) {
             assert true;
@@ -105,14 +105,14 @@ public class ServerFacadeTests {
     @DisplayName("Valid Logout")
     public void positiveLogout() {
         try {
-            serverFacade.Logout(authData.authToken());
+            serverFacade.logout(authData.authToken());
             assert true;
         } catch (Exception e) {
             assert false;
         }
 
         try {
-            serverFacade.ListGames(authData.authToken());
+            serverFacade.listGames(authData.authToken());
             assert false;
         } catch (Unauthorized e) {
             assert true;
@@ -125,7 +125,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Logout")
     public void negativeLogout() {
         try {
-            serverFacade.Logout("1");
+            serverFacade.logout("1");
             assert false;
         } catch (Exception e) {
             assert true;
@@ -136,7 +136,7 @@ public class ServerFacadeTests {
     @DisplayName("Valid Create Game")
     public void positiveCreateGame() {
         try {
-            int gameID = serverFacade.CreateGame(authData.authToken(), "New Game");
+            int gameID = serverFacade.createGame(authData.authToken(), "New Game");
             assert gameID >= 1;
         } catch (Exception e) {
             assert false;
@@ -147,7 +147,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Create Game")
     public void negativeCreateGame() {
         try {
-            serverFacade.CreateGame("12", "New Game");
+            serverFacade.createGame("12", "New Game");
             assert false;
         } catch (Exception e) {
             assert true;
@@ -158,8 +158,8 @@ public class ServerFacadeTests {
     @DisplayName("Valid List Games")
     public void positiveListGames() {
         try {
-            serverFacade.CreateGame(authData.authToken(), "New Game");
-            ArrayList<GameData> games = serverFacade.ListGames(authData.authToken());
+            serverFacade.createGame(authData.authToken(), "New Game");
+            ArrayList<GameData> games = serverFacade.listGames(authData.authToken());
             assert !games.isEmpty();
         } catch (Exception e) {
             assert false;
@@ -170,7 +170,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid List Games")
     public void negativeListGames() {
         try {
-            serverFacade.ListGames("1");
+            serverFacade.listGames("1");
             assert false;
         } catch (Exception e) {
             assert true;
@@ -181,8 +181,8 @@ public class ServerFacadeTests {
     @DisplayName("Valid Join Game")
     public void positiveJoinGame() {
         try {
-            int gameID = serverFacade.CreateGame(authData.authToken(), "New Game");
-            serverFacade.JoinGame(authData.authToken(), ChessGame.TeamColor.WHITE, gameID);
+            int gameID = serverFacade.createGame(authData.authToken(), "New Game");
+            serverFacade.joinGame(authData.authToken(), ChessGame.TeamColor.WHITE, gameID);
             assert true;
         } catch (Exception e) {
             assert false;
@@ -193,7 +193,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Join Game")
     public void negativeJoinGame() {
         try {
-            serverFacade.JoinGame(authData.authToken(), ChessGame.TeamColor.WHITE, 1000);
+            serverFacade.joinGame(authData.authToken(), ChessGame.TeamColor.WHITE, 1000);
             assert false;
         } catch (Exception e) {
             assert true;
@@ -210,7 +210,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Observe Game")
     public void negativeObserveGame() {
         try {
-            serverFacade.ObserveGame("1", 1);
+            serverFacade.observeGame("1", 1);
             assert false;
         } catch (Exception e) {
             assert true;

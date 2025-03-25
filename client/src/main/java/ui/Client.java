@@ -1,6 +1,9 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import exception.AlreadyTaken;
 import exception.Unauthorized;
 import model.AuthData;
@@ -10,7 +13,7 @@ import java.util.*;
 
 public class Client {
 
-    private boolean loggedIn = false;
+    private int ui = 0;
     private final ServerFacade SERVER_FACADE;
     private final Scanner SCANNER = new Scanner(System.in);
     private final String[] PRE_LOGIN_COMMANDS = {"Help", "Quit", "Login", "Register"};
@@ -18,37 +21,44 @@ public class Client {
 
     private String authToken;
     private ArrayList<GameData> games;
+    private GameData currentGame;
+    private ChessGame.TeamColor color;
+    private boolean observer;
     public Client(ServerFacade serverFacade) {
         this.SERVER_FACADE = serverFacade;
-        Help();
+        color = null;
+        currentGame = null;
+        observer = false;
+        help();
         String command = "";
         while (!command.equals("Quit")) {
-            if (!loggedIn) {
-                command = PreLoginUI();
-            } else {
-                command = PostLoginUI();
-            }
+            command = switch (ui) {
+                case 0 -> preLoginUI();
+                case 1 -> postLoginUI();
+                case 2 -> gameplayUI();
+                default -> throw new IllegalStateException("Unexpected value: " + ui);
+            };
 
-            ProcessCommand(command);
+            processCommand(command);
         }
     }
 
-    private void ProcessCommand(String command) {
+    private void processCommand(String command) {
         switch (command) {
-            case "Help"         -> Help();
+            case "Help"         -> help();
             case "Quit"         -> {}
-            case "Login"        -> Login();
-            case "Register"     -> Register();
-            case "Logout"       -> Logout();
-            case "Create"       -> CreateGame();
-            case "List"         -> ListGame();
-            case "Join"         -> JoinGame();
-            case "Observe"      -> ObserverGame();
+            case "Login"        -> login();
+            case "Register"     -> register();
+            case "Logout"       -> logout();
+            case "Create"       -> createGame();
+            case "List"         -> listGame();
+            case "Join"         -> joinGame();
+            case "Observe"      -> observerGame();
             case null, default  -> System.out.println("Invalid Command");
         }
     }
 
-    private String PreLoginUI() {
+    private String preLoginUI() {
         while (true) {
             String command = promptString("");
             if (Arrays.asList(PRE_LOGIN_COMMANDS).contains(command)) {
@@ -58,7 +68,7 @@ public class Client {
         }
     }
 
-    private String PostLoginUI() {
+    private String postLoginUI() {
         while (true) {
             String command = promptString("");
             if (Arrays.asList(POST_LOGIN_COMMANDS).contains(command)) {
@@ -66,6 +76,15 @@ public class Client {
             }
             System.out.println("Invalid Command");
         }
+    }
+
+    private String gameplayUI() {
+        printBoard();
+        observer = false;
+        currentGame = null;
+        color = null;
+        ui = 1;
+        return "Help";
     }
 
     private String promptString(String prompt) {
@@ -78,6 +97,91 @@ public class Client {
         System.out.println("What is the number next to the game you want to join?");
         System.out.print(">>> ");
         return SCANNER.nextInt();
+    }
+
+    private void printBoard() {
+        ChessBoard board = new ChessGame().getBoard();
+        if (observer || color == ChessGame.TeamColor.WHITE) {
+            printBoardWhite(board);
+        } else {
+            printBoardBlack(board);
+        }
+    }
+
+    private void printBoardWhite(ChessBoard board) {
+        boolean light = true;
+        for (int i = 1; i <= 8; i++) {
+            light = !light;
+            StringBuilder string = new StringBuilder();
+            for (int j = 1; j <= 8; j++) {
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+                if (piece == null) {
+                    string.append(lightString).append(EscapeSequences.EMPTY);
+                    light = !light;
+                    continue;
+                }
+
+                ChessGame.TeamColor color = piece.getTeamColor();
+                ChessPiece.PieceType pieceType = piece.getPieceType();
+
+                string.append(lightString).append(drawPiece(color, pieceType, light));
+
+                light = !light;
+            }
+            string.append(EscapeSequences.RESET_BG_COLOR);
+            System.out.println(string);
+        }
+    }
+
+    private void printBoardBlack(ChessBoard board) {
+        boolean light = false;
+        for (int i = 8; i >= 1; i--) {
+            light = !light;
+            StringBuilder string = new StringBuilder();
+            for (int j = 8; j >= 1; j--) {
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+                if (piece == null) {
+                    string.append(lightString).append(EscapeSequences.EMPTY);
+                    light = !light;
+                    continue;
+                }
+
+                ChessGame.TeamColor color = piece.getTeamColor();
+                ChessPiece.PieceType pieceType = piece.getPieceType();
+
+                string.append(lightString).append(drawPiece(color, pieceType, light));
+
+                light = !light;
+            }
+            string.append(EscapeSequences.RESET_BG_COLOR);
+            System.out.println(string);
+        }
+    }
+
+    private String drawPiece(ChessGame.TeamColor color, ChessPiece.PieceType pieceType, boolean light) {
+        String piece;
+        if (color == ChessGame.TeamColor.WHITE) {
+            piece = switch (pieceType) {
+                case KING -> EscapeSequences.WHITE_KING;
+                case QUEEN -> EscapeSequences.WHITE_QUEEN;
+                case BISHOP -> EscapeSequences.WHITE_BISHOP;
+                case KNIGHT -> EscapeSequences.WHITE_KNIGHT;
+                case ROOK -> EscapeSequences.WHITE_ROOK;
+                case PAWN -> EscapeSequences.WHITE_PAWN;
+            };
+        } else {
+            piece = switch (pieceType) {
+                case KING -> EscapeSequences.BLACK_KING;
+                case QUEEN -> EscapeSequences.BLACK_QUEEN;
+                case BISHOP -> EscapeSequences.BLACK_BISHOP;
+                case KNIGHT -> EscapeSequences.BLACK_KNIGHT;
+                case ROOK -> EscapeSequences.BLACK_ROOK;
+                case PAWN -> EscapeSequences.BLACK_PAWN;
+            };
+        }
+        return piece;
     }
 
     private void printGames() {
@@ -110,14 +214,14 @@ public class Client {
         return games.get(gameNumber - 1);
     }
 
-    private int getGame() {
+    private GameData getGame() {
         while (true) {
             int gameNum = promptInt();
 
             GameData game = getGameIDByNumber(gameNum);
 
             if (game != null) {
-                return game.gameID();
+                return game;
             }
             System.out.println("Invalid Game Number.");
         }
@@ -139,27 +243,29 @@ public class Client {
         }
     }
 
-    private void Help() {
+    private void help() {
         System.out.println("Help - Displays commands the user can run");
-        if (!loggedIn) {
-            System.out.println("Quit - Exits the program");
-            System.out.println("Login - Allows for signing in");
-            System.out.println("Register - Allows for creating a new account");
-        } else {
-            System.out.println("Logout - Allows for signing out");
-            System.out.println("Create - Allows for creating a new Chess game.");
-            System.out.println("List - Will list all Chess Games");
-            System.out.println("Join - Allows for joining a Chess Game");
-            System.out.println("Observe - Allows for watching a Chess Game");
+        switch (ui) {
+            case 0 -> {
+                System.out.println("Quit - Exits the program");
+                System.out.println("Login - Allows for signing in");
+                System.out.println("Register - Allows for creating a new account");}
+            case 1 -> {
+                System.out.println("Logout - Allows for signing out");
+                System.out.println("Create - Allows for creating a new Chess game.");
+                System.out.println("List - Will list all Chess Games");
+                System.out.println("Join - Allows for joining a Chess Game");
+                System.out.println("Observe - Allows for watching a Chess Game");
+            }
         }
     }
 
-    private void Login() {
+    private void login() {
         String username = promptString("Enter Your Username:");
         String password = promptString("Enter Your Password:");
 
         try {
-            AuthData authData = SERVER_FACADE.Login(username, password);
+            AuthData authData = SERVER_FACADE.login(username, password);
             authToken = authData.authToken();
         } catch (Unauthorized e) {
             System.out.println("Invalid Login");
@@ -169,16 +275,16 @@ public class Client {
             return;
         }
 
-        loggedIn = true;
+        ui = 1;
     }
 
-    private void Register() {
+    private void register() {
         String username = promptString("Enter Your Desired Username:");
         String password = promptString("Enter Your Desired Password:");
         String email = promptString("Enter Your Email Address:");
 
         try {
-            AuthData authData = SERVER_FACADE.Register(username, password, email);
+            AuthData authData = SERVER_FACADE.register(username, password, email);
             authToken = authData.authToken();
         } catch (AlreadyTaken e) {
             System.out.println("Username Already Taken.");
@@ -188,66 +294,75 @@ public class Client {
             return;
         }
 
-        loggedIn = true;
+        ui = 1;
     }
 
-    private void Logout() {
+    private void logout() {
         try {
-            SERVER_FACADE.Logout(authToken);
+            SERVER_FACADE.logout(authToken);
             authToken = "";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
         }
 
-        loggedIn = false;
+        ui = 0;
     }
 
-    private void CreateGame() {
+    private void createGame() {
         String gameName = promptString("What is the name of your game?");
 
         try {
-            SERVER_FACADE.CreateGame(authToken, gameName);
+            SERVER_FACADE.createGame(authToken, gameName);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void ListGame() {
+    private void listGame() {
         try {
-            this.games = SERVER_FACADE.ListGames(authToken);
+            this.games = SERVER_FACADE.listGames(authToken);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         printGames();
     }
 
-    private void JoinGame() {
-        ListGame();
+    private void joinGame() {
+        listGame();
         if (games == null || games.isEmpty()) {
             return;
         }
-        int gameID = getGame();
+        GameData game = getGame();
         ChessGame.TeamColor color = getTeamColor();
 
         try {
-            SERVER_FACADE.JoinGame(authToken, color, gameID);
+            SERVER_FACADE.joinGame(authToken, color, game.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        currentGame = game;
+        this.color = color;
+        ui = 2;
     }
 
-    private void ObserverGame() {
-        ListGame();
+    private void observerGame() {
+        listGame();
         if (games == null || games.isEmpty()) {
             return;
         }
-        int gameID = getGame();
+        GameData game = getGame();
 
         try {
-            SERVER_FACADE.ObserveGame(authToken, gameID);
+            SERVER_FACADE.observeGame(authToken, game.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        currentGame = game;
+        color = ChessGame.TeamColor.WHITE;
+        observer = true;
+        ui = 2;
     }
 }

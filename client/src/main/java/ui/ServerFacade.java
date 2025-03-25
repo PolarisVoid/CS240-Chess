@@ -73,7 +73,7 @@ public class ServerFacade {
         }
     }
 
-    public AuthData Login(String username, String password) throws Exception {
+    public AuthData login(String username, String password) throws Exception {
         String url = SERVERURL + "/session";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\"}";
@@ -88,7 +88,7 @@ public class ServerFacade {
         }
     }
 
-    public AuthData Register(String username, String password, String email) throws Exception {
+    public AuthData register(String username, String password, String email) throws Exception {
         String url = SERVERURL + "/user";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\", \"email\":\"%s\"}";
@@ -103,7 +103,7 @@ public class ServerFacade {
         }
     }
 
-    public void Logout(String authToken) throws Exception {
+    public void logout(String authToken) throws Exception {
         String url = SERVERURL + "/session";
         String method = "DELETE";
         JsonObject header = new JsonObject();
@@ -115,7 +115,7 @@ public class ServerFacade {
         }
     }
 
-    public int CreateGame(String authToken, String gameName) throws Exception {
+    public int createGame(String authToken, String gameName) throws Exception {
         String url = SERVERURL + "/game";
         String method = "POST";
         JsonObject header = new JsonObject();
@@ -131,7 +131,7 @@ public class ServerFacade {
         return response.get("gameID").getAsInt();
     }
 
-    public ArrayList<GameData> ListGames(String authToken) throws Exception {
+    public ArrayList<GameData> listGames(String authToken) throws Exception {
         String url = SERVERURL + "/game";
         String method = "GET";
         JsonObject header = new JsonObject();
@@ -151,7 +151,7 @@ public class ServerFacade {
         return gamesData;
     }
 
-    public void JoinGame(String authToken, ChessGame.TeamColor color, Number gameID) throws Exception {
+    public void joinGame(String authToken, ChessGame.TeamColor color, Number gameID) throws Exception {
         String url = SERVERURL + "/game";
         String method = "PUT";
         JsonObject header = new JsonObject();
@@ -165,7 +165,7 @@ public class ServerFacade {
         }
     }
 
-    public void ObserveGame(String authToken, Number gameID) throws Exception {
+    public void observeGame(String authToken, Number gameID) throws Exception {
         String url = SERVERURL + "/observe";
         String method = "PUT";
         JsonObject header = new JsonObject();
