@@ -12,7 +12,6 @@ import model.GameData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,9 +20,9 @@ import java.util.Map;
 
 public class ServerFacade {
 
-    private String serverURL;
+    private final String SERVERURL;
     public ServerFacade(int port) {
-        serverURL = "http://localhost:" + port;
+        SERVERURL = "http://localhost:" + port;
     }
 
     private HttpURLConnection sendRequest(String url, String method, JsonObject header, String body) throws URISyntaxException, IOException {
@@ -53,7 +52,7 @@ public class ServerFacade {
         }
     }
     
-    private void getError(int statusCode) throws Exception {
+    private void getError(int statusCode) {
         switch (statusCode) {
             case 400 -> throw new BadRequest("Invalid Request.");
             case 401 -> throw new Unauthorized("You are Unauthorized to do that.");
@@ -68,14 +67,14 @@ public class ServerFacade {
         }
     }
 
-    private <T> T getData(HttpURLConnection http) throws IOException {
+    private AuthData getData(HttpURLConnection http) throws IOException {
         try (InputStream in = http.getInputStream()) {
-            return new Gson().fromJson(new InputStreamReader(in), (Type) AuthData.class);
+            return new Gson().fromJson(new InputStreamReader(in), AuthData.class);
         }
     }
 
     public AuthData Login(String username, String password) throws Exception {
-        String url = serverURL + "/session";
+        String url = SERVERURL + "/session";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\"}";
         String body = String.format(format, username, password);
@@ -90,7 +89,7 @@ public class ServerFacade {
     }
 
     public AuthData Register(String username, String password, String email) throws Exception {
-        String url = serverURL + "/user";
+        String url = SERVERURL + "/user";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\", \"email\":\"%s\"}";
         String body = String.format(format, username, password, email);
@@ -105,7 +104,7 @@ public class ServerFacade {
     }
 
     public void Logout(String authToken) throws Exception {
-        String url = serverURL + "/session";
+        String url = SERVERURL + "/session";
         String method = "DELETE";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -117,7 +116,7 @@ public class ServerFacade {
     }
 
     public int CreateGame(String authToken, String gameName) throws Exception {
-        String url = serverURL + "/game";
+        String url = SERVERURL + "/game";
         String method = "POST";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -133,7 +132,7 @@ public class ServerFacade {
     }
 
     public ArrayList<GameData> ListGames(String authToken) throws Exception {
-        String url = serverURL + "/game";
+        String url = SERVERURL + "/game";
         String method = "GET";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -153,7 +152,7 @@ public class ServerFacade {
     }
 
     public void JoinGame(String authToken, ChessGame.TeamColor color, Number gameID) throws Exception {
-        String url = serverURL + "/game";
+        String url = SERVERURL + "/game";
         String method = "PUT";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -167,7 +166,7 @@ public class ServerFacade {
     }
 
     public void ObserveGame(String authToken, Number gameID) throws Exception {
-        String url = serverURL + "/observe";
+        String url = SERVERURL + "/observe";
         String method = "PUT";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
