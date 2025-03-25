@@ -15,6 +15,9 @@ public class CreateGameHandler implements Route {
         try {
             String authToken = request.headers("authorization");
             CreateGameRequest createGameRequest = new Gson().fromJson(request.body(), CreateGameRequest.class);
+            if (createGameRequest.getGameName() == null || createGameRequest.getGameName() == "") {
+                throw new InvalidRequestException("Missing Information");
+            }
             createGameRequest.setAuthToken(authToken);
             return createGameRequest;
         } catch (Exception e) {
