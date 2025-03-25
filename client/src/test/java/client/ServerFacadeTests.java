@@ -1,7 +1,7 @@
 package client;
 
 import chess.ChessGame;
-import exceptions.Unauthorized;
+import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.*;

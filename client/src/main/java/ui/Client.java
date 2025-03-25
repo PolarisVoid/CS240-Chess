@@ -1,8 +1,8 @@
 package ui;
 
 import chess.ChessGame;
-import exceptions.AlreadyTaken;
-import exceptions.Unauthorized;
+import exception.AlreadyTaken;
+import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
 
@@ -36,7 +36,7 @@ public class Client {
     private void ProcessCommand(String command) {
         switch (command) {
             case "Help"         -> Help();
-            case "Quit"         -> { return; }
+            case "Quit"         -> {}
             case "Login"        -> Login();
             case "Register"     -> Register();
             case "Logout"       -> Logout();
@@ -51,7 +51,7 @@ public class Client {
     private String PreLoginUI() {
         while (true) {
             String command = promptString("");
-            if (Arrays.stream(PRE_LOGIN_COMMANDS).anyMatch(n -> Objects.equals(n, command))) {
+            if (Arrays.asList(PRE_LOGIN_COMMANDS).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");
@@ -61,7 +61,7 @@ public class Client {
     private String PostLoginUI() {
         while (true) {
             String command = promptString("");
-            if (Arrays.stream(POST_LOGIN_COMMANDS).anyMatch(n -> Objects.equals(n, command))) {
+            if (Arrays.asList(POST_LOGIN_COMMANDS).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");
@@ -74,8 +74,8 @@ public class Client {
         return SCANNER.nextLine();
     }
 
-    private int promptInt(String prompt) {
-        System.out.println(prompt);
+    private int promptInt() {
+        System.out.println("What is the number next to the game you want to join?");
         System.out.print(">>> ");
         return SCANNER.nextInt();
     }
@@ -112,7 +112,7 @@ public class Client {
 
     private int getGame() {
         while (true) {
-            int gameNum = promptInt("What is the number next to the game you want to join?");
+            int gameNum = promptInt();
 
             GameData game = getGameIDByNumber(gameNum);
 

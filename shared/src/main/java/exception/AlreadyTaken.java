@@ -1,4 +1,4 @@
-package exceptions;
+package exception;
 
 public class AlreadyTaken extends RuntimeException {
     public AlreadyTaken(String message) {

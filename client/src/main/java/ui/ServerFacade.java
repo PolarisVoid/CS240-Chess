@@ -2,10 +2,10 @@ package ui;
 
 import chess.ChessGame;
 import com.google.gson.*;
-import exceptions.AlreadyTaken;
-import exceptions.BadRequest;
-import exceptions.ServerError;
-import exceptions.Unauthorized;
+import exception.AlreadyTaken;
+import exception.BadRequest;
+import exception.ServerError;
+import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
 
