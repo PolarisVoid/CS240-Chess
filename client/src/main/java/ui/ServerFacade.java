@@ -20,9 +20,9 @@ import java.util.Map;
 
 public class ServerFacade {
 
-    private final String SERVERURL;
+    private final String serverurl;
     public ServerFacade(int port) {
-        SERVERURL = "http://localhost:" + port;
+        serverurl = "http://localhost:" + port;
     }
 
     private HttpURLConnection sendRequest(String url, String method, JsonObject header, String body) throws URISyntaxException, IOException {
@@ -74,7 +74,7 @@ public class ServerFacade {
     }
 
     public AuthData login(String username, String password) throws Exception {
-        String url = SERVERURL + "/session";
+        String url = serverurl + "/session";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\"}";
         String body = String.format(format, username, password);
@@ -89,7 +89,7 @@ public class ServerFacade {
     }
 
     public AuthData register(String username, String password, String email) throws Exception {
-        String url = SERVERURL + "/user";
+        String url = serverurl + "/user";
         String method = "POST";
         String format = "{\"username\":\"%s\", \"password\":\"%s\", \"email\":\"%s\"}";
         String body = String.format(format, username, password, email);
@@ -104,7 +104,7 @@ public class ServerFacade {
     }
 
     public void logout(String authToken) throws Exception {
-        String url = SERVERURL + "/session";
+        String url = serverurl + "/session";
         String method = "DELETE";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -116,7 +116,7 @@ public class ServerFacade {
     }
 
     public int createGame(String authToken, String gameName) throws Exception {
-        String url = SERVERURL + "/game";
+        String url = serverurl + "/game";
         String method = "POST";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -132,7 +132,7 @@ public class ServerFacade {
     }
 
     public ArrayList<GameData> listGames(String authToken) throws Exception {
-        String url = SERVERURL + "/game";
+        String url = serverurl + "/game";
         String method = "GET";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -152,7 +152,7 @@ public class ServerFacade {
     }
 
     public void joinGame(String authToken, ChessGame.TeamColor color, Number gameID) throws Exception {
-        String url = SERVERURL + "/game";
+        String url = serverurl + "/game";
         String method = "PUT";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);
@@ -166,7 +166,7 @@ public class ServerFacade {
     }
 
     public void observeGame(String authToken, Number gameID) throws Exception {
-        String url = SERVERURL + "/observe";
+        String url = serverurl + "/observe";
         String method = "PUT";
         JsonObject header = new JsonObject();
         header.addProperty("authorization", authToken);

@@ -14,10 +14,10 @@ import java.util.*;
 public class Client {
 
     private int ui = 0;
-    private final ServerFacade SERVER_FACADE;
-    private final Scanner SCANNER = new Scanner(System.in);
-    private final String[] PRE_LOGIN_COMMANDS = {"Help", "Quit", "Login", "Register"};
-    private final String[] POST_LOGIN_COMMANDS = {"Help", "Logout", "Create", "List", "Join", "Observe"};
+    private final ServerFacade serverFacade;
+    private final Scanner scanner = new Scanner(System.in);
+    private final String[] preLoginCommands = {"Help", "Quit", "Login", "Register"};
+    private final String[] postLoginCommands = {"Help", "Logout", "Create", "List", "Join", "Observe"};
 
     private String authToken;
     private ArrayList<GameData> games;
@@ -25,7 +25,7 @@ public class Client {
     private ChessGame.TeamColor color;
     private boolean observer;
     public Client(ServerFacade serverFacade) {
-        this.SERVER_FACADE = serverFacade;
+        this.serverFacade = serverFacade;
         color = null;
         currentGame = null;
         observer = false;
@@ -61,7 +61,7 @@ public class Client {
     private String preLoginUI() {
         while (true) {
             String command = promptString("");
-            if (Arrays.asList(PRE_LOGIN_COMMANDS).contains(command)) {
+            if (Arrays.asList(preLoginCommands).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");
@@ -71,7 +71,7 @@ public class Client {
     private String postLoginUI() {
         while (true) {
             String command = promptString("");
-            if (Arrays.asList(POST_LOGIN_COMMANDS).contains(command)) {
+            if (Arrays.asList(postLoginCommands).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");
@@ -90,13 +90,13 @@ public class Client {
     private String promptString(String prompt) {
         System.out.println(prompt);
         System.out.print(">>> ");
-        return SCANNER.nextLine();
+        return scanner.nextLine();
     }
 
     private int promptInt() {
         System.out.println("What is the number next to the game you want to join?");
         System.out.print(">>> ");
-        return SCANNER.nextInt();
+        return scanner.nextInt();
     }
 
     private void printBoard() {
@@ -114,24 +114,26 @@ public class Client {
             light = !light;
             StringBuilder string = new StringBuilder();
             for (int j = 1; j <= 8; j++) {
-                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-                String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
-                if (piece == null) {
-                    string.append(lightString).append(EscapeSequences.EMPTY);
-                    light = !light;
-                    continue;
-                }
-
-                ChessGame.TeamColor color = piece.getTeamColor();
-                ChessPiece.PieceType pieceType = piece.getPieceType();
-
-                string.append(lightString).append(drawPiece(color, pieceType, light));
-
-                light = !light;
+                light = drawRow(board, i, j, light, string);
             }
             string.append(EscapeSequences.RESET_BG_COLOR);
             System.out.println(string);
         }
+    }
+
+    private boolean drawRow(ChessBoard board, int i, int j, boolean light, StringBuilder string) {
+        ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+        String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+        if (piece == null) {
+            string.append(lightString).append(EscapeSequences.EMPTY);
+            return !light;
+        }
+
+        ChessGame.TeamColor color = piece.getTeamColor();
+        ChessPiece.PieceType pieceType = piece.getPieceType();
+
+        string.append(lightString).append(drawPiece(color, pieceType, light));
+        return !light;
     }
 
     private void printBoardBlack(ChessBoard board) {
@@ -140,20 +142,7 @@ public class Client {
             light = !light;
             StringBuilder string = new StringBuilder();
             for (int j = 8; j >= 1; j--) {
-                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-                String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
-                if (piece == null) {
-                    string.append(lightString).append(EscapeSequences.EMPTY);
-                    light = !light;
-                    continue;
-                }
-
-                ChessGame.TeamColor color = piece.getTeamColor();
-                ChessPiece.PieceType pieceType = piece.getPieceType();
-
-                string.append(lightString).append(drawPiece(color, pieceType, light));
-
-                light = !light;
+                light = drawRow(board, i, j, light, string);
             }
             string.append(EscapeSequences.RESET_BG_COLOR);
             System.out.println(string);
@@ -265,7 +254,7 @@ public class Client {
         String password = promptString("Enter Your Password:");
 
         try {
-            AuthData authData = SERVER_FACADE.login(username, password);
+            AuthData authData = serverFacade.login(username, password);
             authToken = authData.authToken();
         } catch (Unauthorized e) {
             System.out.println("Invalid Login");
@@ -284,7 +273,7 @@ public class Client {
         String email = promptString("Enter Your Email Address:");
 
         try {
-            AuthData authData = SERVER_FACADE.register(username, password, email);
+            AuthData authData = serverFacade.register(username, password, email);
             authToken = authData.authToken();
         } catch (AlreadyTaken e) {
             System.out.println("Username Already Taken.");
@@ -299,7 +288,7 @@ public class Client {
 
     private void logout() {
         try {
-            SERVER_FACADE.logout(authToken);
+            serverFacade.logout(authToken);
             authToken = "";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -313,7 +302,7 @@ public class Client {
         String gameName = promptString("What is the name of your game?");
 
         try {
-            SERVER_FACADE.createGame(authToken, gameName);
+            serverFacade.createGame(authToken, gameName);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -321,7 +310,7 @@ public class Client {
 
     private void listGame() {
         try {
-            this.games = SERVER_FACADE.listGames(authToken);
+            this.games = serverFacade.listGames(authToken);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -337,7 +326,7 @@ public class Client {
         ChessGame.TeamColor color = getTeamColor();
 
         try {
-            SERVER_FACADE.joinGame(authToken, color, game.gameID());
+            serverFacade.joinGame(authToken, color, game.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -355,7 +344,7 @@ public class Client {
         GameData game = getGame();
 
         try {
-            SERVER_FACADE.observeGame(authToken, game.gameID());
+            serverFacade.observeGame(authToken, game.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
