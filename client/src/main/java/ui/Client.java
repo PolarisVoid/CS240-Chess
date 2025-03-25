@@ -5,6 +5,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.AlreadyTaken;
+import exception.BadRequest;
 import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
@@ -278,6 +279,9 @@ public class Client {
         } catch (AlreadyTaken e) {
             System.out.println("Username Already Taken.");
             return;
+        } catch (BadRequest e) {
+            System.out.println("Bad User Input. Please fill in all fields with valid values.");
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;

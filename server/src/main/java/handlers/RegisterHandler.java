@@ -17,6 +17,9 @@ public class RegisterHandler implements Route {
             if (registerRequest.getPassword() == null || registerRequest.getUsername() == null || registerRequest.getEmail() == null) {
                 throw new InvalidRequestException("Missing Information");
             }
+            if (registerRequest.getPassword() == "" || registerRequest.getUsername() == "" || registerRequest.getEmail() == "") {
+                throw new InvalidRequestException("Missing Information");
+            }
             return registerRequest;
         } catch (Exception e) {
             throw new InvalidRequestException(e.toString());
