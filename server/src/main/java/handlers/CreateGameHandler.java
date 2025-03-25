@@ -9,13 +9,15 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Objects;
+
 public class CreateGameHandler implements Route {
 
     private CreateGameRequest createRequest(Request request) throws InvalidRequestException {
         try {
             String authToken = request.headers("authorization");
             CreateGameRequest createGameRequest = new Gson().fromJson(request.body(), CreateGameRequest.class);
-            if (createGameRequest.getGameName() == null || createGameRequest.getGameName() == "") {
+            if (createGameRequest.getGameName() == null || Objects.equals(createGameRequest.getGameName(), "")) {
                 throw new InvalidRequestException("Missing Information");
             }
             createGameRequest.setAuthToken(authToken);

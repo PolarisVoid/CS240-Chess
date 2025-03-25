@@ -43,6 +43,7 @@ public class RegisterHandler implements Route {
             return "{\"message\": \"Error: already taken\" }";
         } catch (Exception e) {
             response.status(500);
+            System.out.println(e);
             return "{\"message\": \"Error: " + e + "\" }";
         }
     }

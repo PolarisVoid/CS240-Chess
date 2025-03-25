@@ -58,7 +58,7 @@ public class DatabaseManager {
                     CREATE TABLE IF NOT EXISTS USER (
                         USERNAME VARCHAR(50) PRIMARY KEY,
                         PASSWORD VARCHAR(255) NOT NULL,
-                        EMAIL VARCHAR(100) UNIQUE NOT NULL
+                        EMAIL VARCHAR(100) NOT NULL
                     )""";
             var authTable = """
                     CREATE TABLE IF NOT EXISTS AUTH (
