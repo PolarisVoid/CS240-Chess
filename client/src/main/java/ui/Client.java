@@ -207,8 +207,7 @@ public class Client {
         String gameName = promptString("What is the name of your game?");
 
         try {
-            int gameID = SERVER_FACADE.CreateGame(authToken, gameName);
-            System.out.println(gameID);
+            SERVER_FACADE.CreateGame(authToken, gameName);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
