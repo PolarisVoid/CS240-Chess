@@ -109,11 +109,24 @@ public class Client {
     }
 
     private void printBoardWhite(ChessBoard board) {
-        boolean light = true;
-        for (int i = 1; i <= 8; i++) {
+        boolean light = false;
+        for (int i = 8; i >= 1; i--) {
             light = !light;
             StringBuilder string = new StringBuilder();
             for (int j = 1; j <= 8; j++) {
+                light = drawRow(board, i, j, light, string);
+            }
+            string.append(EscapeSequences.RESET_BG_COLOR);
+            System.out.println(string);
+        }
+    }
+
+    private void printBoardBlack(ChessBoard board) {
+        boolean light = false;
+        for (int i = 1; i <= 8; i++) {
+            light = !light;
+            StringBuilder string = new StringBuilder();
+            for (int j = 8; j >= 1; j--) {
                 light = drawRow(board, i, j, light, string);
             }
             string.append(EscapeSequences.RESET_BG_COLOR);
@@ -134,19 +147,6 @@ public class Client {
 
         string.append(lightString).append(drawPiece(color, pieceType, light));
         return !light;
-    }
-
-    private void printBoardBlack(ChessBoard board) {
-        boolean light = false;
-        for (int i = 8; i >= 1; i--) {
-            light = !light;
-            StringBuilder string = new StringBuilder();
-            for (int j = 8; j >= 1; j--) {
-                light = drawRow(board, i, j, light, string);
-            }
-            string.append(EscapeSequences.RESET_BG_COLOR);
-            System.out.println(string);
-        }
     }
 
     private String drawPiece(ChessGame.TeamColor color, ChessPiece.PieceType pieceType, boolean light) {
