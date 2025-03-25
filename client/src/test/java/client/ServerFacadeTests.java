@@ -18,8 +18,8 @@ public class ServerFacadeTests {
     private static Server server;
     private static int port;
     private static ServerFacade serverFacade;
-    private static final String username = "Username";
-    private static final String password = "Password";
+    private static final String USERNAME = "Username";
+    private static final String PASSWORD = "Password";
     private static AuthData authData;
 
     @BeforeAll
@@ -48,7 +48,7 @@ public class ServerFacadeTests {
 
         try {
             String email = "test@email.com";
-            authData = serverFacade.Register(username, password, email);
+            authData = serverFacade.Register(USERNAME, PASSWORD, email);
         } catch (Exception ignore) {}
     }
 
@@ -56,7 +56,7 @@ public class ServerFacadeTests {
     @DisplayName("Valid Login")
     public void positiveLogin() {
         try {
-            AuthData authData = serverFacade.Login(username, password);
+            AuthData authData = serverFacade.Login(USERNAME, PASSWORD);
             assert true;
             assert authData.authToken() != null;
             assert authData.username() != null;
@@ -69,7 +69,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Login")
     public void negativeLogin() {
         try {
-            serverFacade.Login("Fake user", password);
+            serverFacade.Login("Fake user", PASSWORD);
             assert false;
         } catch (Exception e) {
             assert true;
@@ -94,7 +94,7 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Register")
     public void negativeRegister() {
         try {
-            serverFacade.Register(username, "", "");
+            serverFacade.Register(USERNAME, "", "");
             assert false;
         } catch (Exception e) {
             assert true;
