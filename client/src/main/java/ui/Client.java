@@ -111,28 +111,56 @@ public class Client {
 
     private void printBoardWhite(ChessBoard board) {
         boolean light = false;
+        System.out.println(createHeader(color));
         for (int i = 8; i >= 1; i--) {
             light = !light;
             StringBuilder string = new StringBuilder();
+            string.append(EscapeSequences.SET_BG_COLOR_BLACK).append(String.format(" %d ", i));
             for (int j = 1; j <= 8; j++) {
                 light = drawRow(board, i, j, light, string);
             }
+            string.append(EscapeSequences.SET_BG_COLOR_BLACK).append(String.format(" %d ", i));
             string.append(EscapeSequences.RESET_BG_COLOR);
             System.out.println(string);
         }
+        System.out.println(createHeader(color));
     }
 
     private void printBoardBlack(ChessBoard board) {
         boolean light = false;
+        System.out.println(createHeader(color));
         for (int i = 1; i <= 8; i++) {
             light = !light;
             StringBuilder string = new StringBuilder();
+            string.append(EscapeSequences.SET_BG_COLOR_BLACK).append(String.format(" %d ", i));
             for (int j = 8; j >= 1; j--) {
                 light = drawRow(board, i, j, light, string);
             }
+            string.append(EscapeSequences.SET_BG_COLOR_BLACK).append(String.format(" %d ", i));
             string.append(EscapeSequences.RESET_BG_COLOR);
             System.out.println(string);
         }
+        System.out.println(createHeader(color));
+    }
+
+    private String createHeader(ChessGame.TeamColor color) {
+        return switch (color) {
+            case WHITE -> {
+                StringBuilder string = new StringBuilder();
+                string.append(EscapeSequences.SET_BG_COLOR_BLACK);
+                string.append("    a   b   c  d   e  f   g  h    ");
+                string.append(EscapeSequences.RESET_BG_COLOR);
+                yield string.toString();
+            }
+            case BLACK -> {
+                StringBuilder string = new StringBuilder();
+                string.append(EscapeSequences.SET_BG_COLOR_BLACK);
+                string.append("    h   g   f  e   d  c   b  a    ");
+                string.append(EscapeSequences.RESET_BG_COLOR);
+                yield string.toString();
+            }
+            case null -> "";
+        };
     }
 
     private boolean drawRow(ChessBoard board, int i, int j, boolean light, StringBuilder string) {
@@ -331,6 +359,9 @@ public class Client {
 
         try {
             serverFacade.joinGame(authToken, color, game.gameID());
+        } catch (AlreadyTaken e) {
+            System.out.println("Already Taken");
+            return;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
