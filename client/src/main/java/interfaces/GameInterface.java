@@ -25,7 +25,6 @@ public class GameInterface extends Interface {
 
     public String ui() {
         printBoard();
-        client.setInterface(new PostLoginInterface(client));
         while (true) {
             String command = promptString("");
             if (Arrays.asList(commands).contains(command)) {
