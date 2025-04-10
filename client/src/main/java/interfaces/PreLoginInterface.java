@@ -9,17 +9,17 @@ import ui.Client;
 import java.util.Arrays;
 
 public class PreLoginInterface extends Interface {
-    private static final String[] commands = {"Help", "Quit", "Login", "Register"};
+    private static final String[] COMMANDS = {"Help", "Quit", "Login", "Register"};
 
     public PreLoginInterface(Client client) {
-        super(client);
+        super(client, COMMANDS);
         help();
     }
 
     public String ui() {
         while (true) {
             String command = promptString("");
-            if (Arrays.asList(commands).contains(command)) {
+            if (Arrays.asList(COMMANDS).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");

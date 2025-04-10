@@ -10,18 +10,18 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class PostLoginInterface extends Interface {
-    private static final String[] commands = {"Help", "Logout", "Create", "List", "Join", "Observe"};
+    private static final String[] COMMANDS = {"Help", "Logout", "Create", "List", "Join", "Observe"};
     private ArrayList<GameData> games = new ArrayList<>();
 
     public PostLoginInterface(Client client) {
-        super(client);
+        super(client, COMMANDS);
         help();
     }
 
     public String ui() {
         while (true) {
             String command = promptString("");
-            if (Arrays.asList(commands).contains(command)) {
+            if (Arrays.asList(COMMANDS).contains(command)) {
                 return command;
             }
             System.out.println("Invalid Command");
@@ -129,7 +129,7 @@ public class PostLoginInterface extends Interface {
                 gameNum = promptInt("What is the number next to the game you want to join?");
             } catch (Exception e) {
                 System.out.println("Invalid Game Number.");
-                scanner.nextLine();
+                SCANNER.nextLine();
                 continue;
             }
             GameData game = getGameIDByNumber(gameNum);

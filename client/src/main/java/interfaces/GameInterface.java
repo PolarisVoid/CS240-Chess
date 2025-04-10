@@ -1,7 +1,6 @@
 package interfaces;
 
 import chess.*;
-import facades.WSClient;
 import model.GameData;
 import ui.Client;
 import ui.EscapeSequences;
@@ -11,7 +10,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class GameInterface extends Interface {
-    private static final String[] commands = {"Help", "Redraw", "Leave", "Move", "Resign", "Legal Moves"};
+    private static final String[] COMMANDS = {"Help", "Redraw", "Leave", "Move", "Resign", "Legal Moves"};
     private GameData game;
     private final ChessGame.TeamColor color;
     private final boolean observer;
@@ -19,22 +18,14 @@ public class GameInterface extends Interface {
     private ChessPosition chessPiecePosition = null;
 
     public GameInterface(Client client, GameData game, ChessGame.TeamColor color, boolean observer) {
-        super(client);
+        super(client, COMMANDS);
         this.game = game;
         this.color = color;
         this.observer = observer;
         help();
     }
 
-    public String ui() {
-        while (true) {
-            String command = promptString("");
-            if (Arrays.asList(commands).contains(command)) {
-                return command;
-            }
-            System.out.println("Invalid Command");
-        }
-    }
+
 
     public void help() {
         System.out.println("Help - Displays commands the user can run");
@@ -290,7 +281,7 @@ public class GameInterface extends Interface {
                 row = promptInt("Row Number: ");
             } catch (Exception e) {
                 System.out.println("Invalid Row. Please enter a number between 1 and 8");
-                scanner.nextLine();
+                SCANNER.nextLine();
                 continue;
             }
 
