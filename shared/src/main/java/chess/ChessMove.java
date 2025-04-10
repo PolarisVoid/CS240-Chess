@@ -26,11 +26,11 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "ChessMove{" +
-                "start=" + start +
-                ", end=" + end +
-                ", promotion=" + promotion +
-                '}';
+        return "\"{" +
+                "start:\"" + start +
+                "\", end:\"" + end +
+                "\", promotion=\"" + promotion +
+                "\"}\"";
     }
 
     final ChessPosition start;
