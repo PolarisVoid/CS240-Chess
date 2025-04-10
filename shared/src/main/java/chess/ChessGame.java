@@ -13,6 +13,7 @@ public class ChessGame {
 
     ChessBoard board;
     TeamColor nextTurn;
+    TeamColor resigned;
 
     public ChessGame() {
         board = new ChessBoard();
@@ -34,6 +35,14 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) {
         this.nextTurn = team;
+    }
+
+    public void setResigned(TeamColor resigned) {
+        this.resigned = resigned;
+    }
+
+    public TeamColor getResigned() {
+        return resigned;
     }
 
     /**
