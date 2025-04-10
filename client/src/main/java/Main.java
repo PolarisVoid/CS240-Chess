@@ -1,5 +1,5 @@
 import ui.Client;
-import ui.ServerFacade;
+import facades.ServerFacade;
 
 public class Main {
     public static void main(String[] args) {
