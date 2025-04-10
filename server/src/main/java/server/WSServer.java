@@ -6,16 +6,14 @@ import handlers.WebSocketHandler;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.responses.ErrorResponse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 @WebSocket
 public class WSServer {
-    HashMap<Integer, ArrayList<Session>> games = new HashMap<>();
-
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws Exception {
+    public void onMessage(Session session, String message) {
         try {
             String command = getCommand(message);
             switch (command) {
@@ -23,7 +21,10 @@ public class WSServer {
                 case "MAKE_MOVE"  -> WebSocketHandler.handleMakeMove(session, message);
                 case "LEAVE"      -> WebSocketHandler.handleLeave(session, message);
                 case "RESIGN"     -> WebSocketHandler.handleResign(session, message);
-                case null, default -> session.getRemote().sendString("{\"error\": \"Invalid Command\"}");
+                case null, default -> {
+                    String error = new ErrorResponse("Invalid Command").toString();
+                    session.getRemote().sendString(error);
+                }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
