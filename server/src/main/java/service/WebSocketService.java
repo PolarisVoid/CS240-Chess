@@ -120,11 +120,11 @@ public class WebSocketService extends BaseService {
         sendMessages(request.gameID(), new LoadGameResponse(game).toString(), null);
 
         if (game.isInStalemate(color)) {
-            notifyAllExceptMe(request.gameID(), "Stalemate", session);
+            notifyAllExceptMe(request.gameID(), "Stalemate! Game Over", session);
         } else if (game.isInCheckmate(color)) {
-            notifyAllExceptMe(request.gameID(), "CheckMate", session);
+            notifyAllExceptMe(request.gameID(), "CheckMate! Game Over", session);
         } else {
-            notifyAllExceptMe(request.gameID(), "Move Made", session);
+            notifyAllExceptMe(request.gameID(), authData.username() + " made a move.", session);
         }
     }
 
@@ -140,10 +140,10 @@ public class WebSocketService extends BaseService {
 
         removeUser(gameData, getUserColor(authData, gameData));
         sessions.remove(session);
-        notifyAllExceptMe(request.gameID(), authData.authToken() + " Left the Game", session);
+        notifyAllExceptMe(request.gameID(), authData.username() + " has Left the Game", session);
     }
 
-    public static void handleResign(Session session, ResignRequest request) throws Exception {
+    public static void handleResign(ResignRequest request) throws Exception {
         AuthData authData = authenticate(request.authToken());
         GameData gameData = GAME_DAO.getGame(request.gameID());
         validateGame(gameData);
@@ -158,7 +158,7 @@ public class WebSocketService extends BaseService {
         game.setResigned(getUserColor(authData, gameData));
         updateChessGame(gameData, game);
 
-        notifyAll(request.gameID(), authData.authToken() + " Resigned");
+        notifyAll(request.gameID(), authData.username() + " has Resigned");
     }
 
     private static void notifyAll(Integer gameID, String message) {

@@ -6,7 +6,6 @@ import ui.Client;
 import ui.EscapeSequences;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class GameInterface extends Interface {
@@ -25,15 +24,15 @@ public class GameInterface extends Interface {
         help();
     }
 
-
-
     public void help() {
         System.out.println("Help - Displays commands the user can run");
-        System.out.println("Redraw - Displays commands the user can run");
-        System.out.println("Leave - Displays commands the user can run");
-        System.out.println("Move - Displays commands the user can run");
-        System.out.println("Resign - Displays commands the user can run");
-        System.out.println("Legal Moves - Displays commands the user can run");
+        System.out.println("Leave - Allows the user to leave the game.");
+        System.out.println("Redraw - Redraws the Chess board");
+        System.out.println("Legal Moves - Shows the legal moves for a piece");
+        if (!observer) {
+            System.out.println("Move - Allows the user to make a move");
+            System.out.println("Resign - Allows the user to resign.");
+        }
     }
 
     public void setChessGame(ChessGame chessGame) {
@@ -65,6 +64,10 @@ public class GameInterface extends Interface {
     }
 
     public void makeMove() {
+        if (observer) {
+            System.out.println("You are an observer and can't make moves");
+            return;
+        }
         System.out.println("What is the starting position?");
         int startRow = getRow();
         int startCol = getCol();
@@ -107,6 +110,10 @@ public class GameInterface extends Interface {
     }
 
     public void resign() {
+        if (observer) {
+            System.out.println("You are an observer and can't resign");
+            return;
+        }
         serverFacade.resign(authToken, game.gameID());
     }
 
@@ -184,20 +191,10 @@ public class GameInterface extends Interface {
 
     private String createHeader(ChessGame.TeamColor color) {
         return switch (color) {
-            case WHITE -> {
-                StringBuilder string = new StringBuilder();
-                string.append(EscapeSequences.SET_BG_COLOR_BLACK);
-                string.append("    a   b   c  d   e  f   g  h    ");
-                string.append(EscapeSequences.RESET_BG_COLOR);
-                yield string.toString();
-            }
-            case BLACK -> {
-                StringBuilder string = new StringBuilder();
-                string.append(EscapeSequences.SET_BG_COLOR_BLACK);
-                string.append("    h   g   f  e   d  c   b  a    ");
-                string.append(EscapeSequences.RESET_BG_COLOR);
-                yield string.toString();
-            }
+            case WHITE -> EscapeSequences.SET_BG_COLOR_BLACK + "    a   b   c  d   e  f   g  h    " +
+                    EscapeSequences.RESET_BG_COLOR;
+            case BLACK -> EscapeSequences.SET_BG_COLOR_BLACK + "    h   g   f  e   d  c   b  a    " +
+                    EscapeSequences.RESET_BG_COLOR;
             case null -> "";
         };
     }
@@ -222,11 +219,11 @@ public class GameInterface extends Interface {
         ChessGame.TeamColor color = piece.getTeamColor();
         ChessPiece.PieceType pieceType = piece.getPieceType();
 
-        string.append(lightString).append(drawPiece(color, pieceType, light));
+        string.append(lightString).append(drawPiece(color, pieceType));
         return !light;
     }
 
-    private String drawPiece(ChessGame.TeamColor color, ChessPiece.PieceType pieceType, boolean light) {
+    private String drawPiece(ChessGame.TeamColor color, ChessPiece.PieceType pieceType) {
         String piece;
         if (color == ChessGame.TeamColor.WHITE) {
             piece = switch (pieceType) {

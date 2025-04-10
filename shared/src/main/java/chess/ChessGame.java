@@ -210,15 +210,27 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
 
-        if (piece == null || piece.getTeamColor() != nextTurn) {
-            throw new InvalidMoveException();
+        if (piece == null) {
+            throw new InvalidMoveException("Can't Move an invalid piece");
+        }
+        if (piece.getTeamColor() != nextTurn) {
+            throw new InvalidMoveException("It is not your turn");
+        }
+        if (isInCheckmate(TeamColor.WHITE) || isInCheckmate(TeamColor.BLACK)) {
+            throw new InvalidMoveException("Game has ended. Moves can't be made.");
+        }
+        if (isInStalemate(TeamColor.WHITE) || isInStalemate(TeamColor.BLACK)) {
+            throw new InvalidMoveException("Game has ended in a draw. Moves can't be made.");
+        }
+        if (resigned != null) {
+            throw new InvalidMoveException("User " + resigned + " has resigned. Game Over.");
         }
 
         Collection<ChessMove> validPositionMoves = validMoves(move.getStartPosition());
 
         if (validPositionMoves.contains(move)) {
             board.makeMove(move);
-            nextTurn = (nextTurn == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE;
+            setTeamTurn((nextTurn == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE);
             return;
         }
         throw new InvalidMoveException();
