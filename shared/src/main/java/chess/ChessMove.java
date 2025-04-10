@@ -1,5 +1,8 @@
 package chess;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import java.util.Objects;
 
 /**
@@ -26,11 +29,8 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "\"{" +
-                "start:\"" + start +
-                "\", end:\"" + end +
-                "\", promotion=\"" + promotion +
-                "\"}\"";
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     final ChessPosition start;

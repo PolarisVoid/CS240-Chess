@@ -13,8 +13,8 @@ public class Client {
 
     public Client(ServerFacade serverFacade) {
         this.serverFacade = serverFacade;
+        this.serverFacade.setClient(this);
         anInterface = new PreLoginInterface(this);
-        anInterface.help();
         String command = "";
         while (!command.equals("Quit")) {
             command = anInterface.ui();
@@ -56,5 +56,9 @@ public class Client {
 
     public void setInterface(Interface anInterface) {
         this.anInterface = anInterface;
+    }
+
+    public Interface getAnInterface() {
+        return this.anInterface;
     }
 }

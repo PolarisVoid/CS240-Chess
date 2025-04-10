@@ -140,7 +140,7 @@ public class WebSocketService extends BaseService {
 
         removeUser(gameData, getUserColor(authData, gameData));
         sessions.remove(session);
-        notifyAllExceptMe(request.gameID(), "Leave", session);
+        notifyAllExceptMe(request.gameID(), authData.authToken() + " Left the Game", session);
     }
 
     public static void handleResign(Session session, ResignRequest request) throws Exception {
@@ -158,7 +158,7 @@ public class WebSocketService extends BaseService {
         game.setResigned(getUserColor(authData, gameData));
         updateChessGame(gameData, game);
 
-        notifyAll(request.gameID(), "Resigned");
+        notifyAll(request.gameID(), authData.authToken() + " Resigned");
     }
 
     private static void notifyAll(Integer gameID, String message) {

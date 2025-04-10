@@ -15,6 +15,7 @@ public class PostLoginInterface extends Interface {
 
     public PostLoginInterface(Client client) {
         super(client);
+        help();
     }
 
     public String ui() {
@@ -123,8 +124,14 @@ public class PostLoginInterface extends Interface {
 
     private GameData getGame() {
         while (true) {
-            int gameNum = promptInt();
-
+            int gameNum;
+            try {
+                gameNum = promptInt("What is the number next to the game you want to join?");
+            } catch (Exception e) {
+                System.out.println("Invalid Game Number.");
+                scanner.nextLine();
+                continue;
+            }
             GameData game = getGameIDByNumber(gameNum);
 
             if (game != null) {

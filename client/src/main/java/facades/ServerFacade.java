@@ -9,6 +9,7 @@ import exception.ServerError;
 import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
+import ui.Client;
 import websocket.commands.UserGameCommand;
 import websocket.requests.LeaveRequest;
 
@@ -26,14 +27,19 @@ public class ServerFacade {
     private final String serverURL;
     private WSClient wsClient;
     public ServerFacade(int port) {
-        serverURL = "http://localhost:" + port;
+        String url = "//localhost:" + port;
+        serverURL = "http:" + url;
         try {
-            URI uri = new URI(serverURL + "/ws");
+            URI uri = new URI("ws:" + url + "/ws");
             wsClient = new WSClient(uri);
         } catch (Exception e) {
             System.out.println("Failed To connect");
         }
 
+    }
+
+    public void setClient(Client client) {
+        this.wsClient.setClient(client);
     }
 
     private HttpURLConnection sendRequest(String url, String method, JsonObject header, String body) throws URISyntaxException, IOException {
@@ -176,61 +182,42 @@ public class ServerFacade {
         }
     }
 
-    public void observeGame(String authToken, int gameID) throws Exception {
+    public void connect(String authToken, int gameID) {
         JsonObject message = new JsonObject();
         message.addProperty("commandType", "CONNECT");
         message.addProperty("authToken", authToken);
         message.addProperty("gameID", gameID);
-        message.addProperty("observer", true);
-        message.add("color", null); // You can skip this if not needed
 
         wsClient.sendMessage(new Gson().toJson(message));
     }
 
 
-    public void connect(String authToken, int gameID, ChessGame.TeamColor color) throws Exception {
-        JsonObject message = new JsonObject();
-        message.addProperty("commandType", "CONNECT");
-        message.addProperty("authToken", authToken);
-        message.addProperty("gameID", gameID);
-        message.addProperty("observer", false);
-        message.addProperty("color", color.toString());
-
-        wsClient.sendMessage(new Gson().toJson(message));
-    }
-
-
-    public void makeMove(String authToken, int gameID, ChessGame.TeamColor color, ChessMove move) throws Exception {
+    public void makeMove(String authToken, int gameID, ChessMove move) {
         JsonObject message = new JsonObject();
         message.addProperty("commandType", "MAKE_MOVE");
         message.addProperty("authToken", authToken);
         message.addProperty("gameID", gameID);
-        message.addProperty("color", color.toString());
-        message.addProperty("move", move.toString());
+        message.add("move", new Gson().toJsonTree(move));
 
+        System.out.println(message);
         wsClient.sendMessage(new Gson().toJson(message));
     }
 
 
-    public void leave(String authToken, int gameID, boolean observer, ChessGame.TeamColor color) throws Exception {
-        LeaveRequest request = new LeaveRequest(UserGameCommand.CommandType.LEAVE, authToken, gameID, observer, color);
-
+    public void leave(String authToken, int gameID) {
         JsonObject message = new JsonObject();
         message.addProperty("commandType", "LEAVE");
         message.addProperty("authToken", authToken);
         message.addProperty("gameID", gameID);
-        message.addProperty("observer", observer);
-        message.addProperty("color", color.toString());
 
         wsClient.sendMessage(new Gson().toJson(message));
     }
 
-    public void resign(String authToken, int gameID, ChessGame.TeamColor color) throws Exception {
+    public void resign(String authToken, int gameID) {
         JsonObject message = new JsonObject();
         message.addProperty("commandType", "RESIGN");
         message.addProperty("authToken", authToken);
         message.addProperty("gameID", gameID);
-        message.addProperty("color", color.toString());
 
         wsClient.sendMessage(new Gson().toJson(message));
     }

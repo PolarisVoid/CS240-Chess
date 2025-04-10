@@ -1,12 +1,17 @@
 package interfaces;
 
+import chess.ChessGame;
+import model.GameData;
 import ui.Client;
 import facades.ServerFacade;
 
+import java.io.Console;
+import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Interface{
-    private static final Scanner scanner = new Scanner(System.in);
+    static final Scanner scanner = new Scanner(System.in);
     final Client client;
     final String authToken;
     final ServerFacade serverFacade;
@@ -20,13 +25,18 @@ public class Interface{
     static String promptString(String prompt) {
         System.out.println(prompt);
         System.out.print(">>> ");
-        return scanner.nextLine();
+        String value = scanner.nextLine();
+        System.out.flush();
+        return value;
     }
 
-    static int promptInt() {
-        System.out.println("What is the number next to the game you want to join?");
+    static int promptInt(String prompt) {
+        System.out.println(prompt);
         System.out.print(">>> ");
-        return scanner.nextInt();
+        int value = scanner.nextInt();
+        scanner.nextLine();
+        System.out.flush();
+        return value;
     }
 
     public String ui() {throw new RuntimeException("Not Implemented");}
@@ -43,4 +53,5 @@ public class Interface{
     public void makeMove() {throw new RuntimeException("Not Implemented");}
     public void resign() {throw new RuntimeException("Not Implemented");}
     public void highlightLegalMoves() {throw new RuntimeException("Not Implemented");}
+    public void setChessGame(ChessGame chessGame) {throw new RuntimeException("Not Implemented");}
 }

@@ -1,30 +1,32 @@
 package interfaces;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+import facades.WSClient;
 import model.GameData;
 import ui.Client;
 import ui.EscapeSequences;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GameInterface extends Interface {
     private static final String[] commands = {"Help", "Redraw", "Leave", "Move", "Resign", "Legal Moves"};
-    private final GameData game;
+    private GameData game;
     private final ChessGame.TeamColor color;
     private final boolean observer;
+    private ArrayList<ChessMove> highlightMoves = new ArrayList<>();
+    private ChessPosition chessPiecePosition = null;
 
     public GameInterface(Client client, GameData game, ChessGame.TeamColor color, boolean observer) {
         super(client);
         this.game = game;
         this.color = color;
         this.observer = observer;
+        help();
     }
 
     public String ui() {
-        printBoard();
         while (true) {
             String command = promptString("");
             if (Arrays.asList(commands).contains(command)) {
@@ -43,14 +45,111 @@ public class GameInterface extends Interface {
         System.out.println("Legal Moves - Displays commands the user can run");
     }
 
+    public void setChessGame(ChessGame chessGame) {
+        this.game = new GameData(game.gameID(), game.gameName(), game.whiteUsername(), game.blackUsername(), chessGame);
+        System.out.println();
+        help();
+        printBoard();
+        System.out.print(">>> ");
+        System.out.flush();
+    }
+
     public void redrawChessBoard() {printBoard();}
-    public void leaveGame() {}
-    public void makeMove() {}
-    public void resign() {}
-    public void highlightLegalMoves() {}
+
+    public void leaveGame() {
+        ChessGame chessGame = game.game();
+        if (chessGame == null) {
+            System.out.println("Game board doesn't Exist");
+            serverFacade.leave(authToken, game.gameID());
+            client.setInterface(new PostLoginInterface(this.client));
+            return;
+        }
+
+        if (chessGame.getResigned() != null) {
+            serverFacade.resign(authToken, game.gameID());
+        }
+
+        serverFacade.leave(authToken, game.gameID());
+        client.setInterface(new PostLoginInterface(this.client));
+    }
+
+    public void makeMove() {
+        System.out.println("What is the starting position?");
+        int startRow = getRow();
+        int startCol = getCol();
+        ChessPosition startPosition = new ChessPosition(startRow, startCol);
+
+        System.out.println("What is the ending Position?");
+        int endRow = getRow();
+        int endCol = getCol();
+        ChessPosition endPosition = new ChessPosition(endRow, endCol);
+
+        ChessPiece.PieceType chessPiece = null;
+        if ((color == ChessGame.TeamColor.BLACK && endRow == 1)
+         || (color == ChessGame.TeamColor.WHITE && endRow == 8)) {
+            chessPiece = getChessPiece();
+        }
+
+        ChessMove chessMove = new ChessMove(startPosition, endPosition, chessPiece);
+        ChessGame chessGame = game.game();
+        ChessBoard board = chessGame.getBoard();
+        ArrayList<ChessMove> chessMoves = (ArrayList<ChessMove>) chessGame.getAllValidMoves(color, board);
+        if (!chessMoves.contains(chessMove)) {
+            System.out.println("Move is not valid");
+            return;
+        }
+        serverFacade.makeMove(authToken, game.gameID(), chessMove);
+    }
+
+    private ChessPiece.PieceType getChessPiece() {
+        while (true) {
+            String piece = promptString("Piece: ");
+
+            switch (piece) {
+                case "KNIGHT" -> {return ChessPiece.PieceType.KNIGHT;}
+                case "BISHOP" -> {return ChessPiece.PieceType.BISHOP;}
+                case "ROOK" -> {return ChessPiece.PieceType.ROOK;}
+                case "QUEEN" -> {return ChessPiece.PieceType.QUEEN;}
+            }
+            System.out.println("Invalid Piece. Pieces: KNIGHT, BISHOP, ROOK, QUEEN");
+        }
+    }
+
+    public void resign() {
+        serverFacade.resign(authToken, game.gameID());
+    }
+
+    public void highlightLegalMoves() {
+        System.out.println("What is the position of the Piece?");
+        int row = getRow();
+        int col = getCol();
+        ChessPosition chessPosition = new ChessPosition(row, col);
+
+        ChessGame chessGame = game.game();
+        ChessBoard board = chessGame.getBoard();
+        ChessPiece piece = board.getPiece(chessPosition);
+        highlightMoves = (ArrayList<ChessMove>) piece.pieceMoves(board, chessPosition);
+        chessPiecePosition = chessPosition;
+        printBoard();
+        highlightMoves = new ArrayList<>();
+    }
+
+    private boolean containsMove(ChessPosition chessPosition) {
+        for (ChessMove chessMove : highlightMoves) {
+            if (Objects.equals(chessPosition, chessMove.getEndPosition())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void printBoard() {
-        ChessBoard board = game.game().getBoard();
+        ChessGame chessGame = game.game();
+        if (chessGame == null) {
+            System.out.println("Game board hasn't been retried");
+            return;
+        }
+        ChessBoard board = chessGame.getBoard();
         if (observer || color == ChessGame.TeamColor.WHITE) {
             printBoardWhite(board);
         } else {
@@ -113,8 +212,17 @@ public class GameInterface extends Interface {
     }
 
     private boolean drawRow(ChessBoard board, int i, int j, boolean light, StringBuilder string) {
-        ChessPiece piece = board.getPiece(new ChessPosition(i, j));
-        String lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+        ChessPosition chessPosition = new ChessPosition(i, j);
+        ChessPiece piece = board.getPiece(chessPosition);
+        String lightString;
+        if (chessPosition == chessPiecePosition) {
+            lightString = EscapeSequences.SET_BG_COLOR_YELLOW;
+        } else if (containsMove(chessPosition)) {
+            lightString = light ? EscapeSequences.SET_BG_COLOR_GREEN : EscapeSequences.SET_BG_COLOR_DARK_GREEN;
+        } else {
+            lightString = light ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+        }
+
         if (piece == null) {
             string.append(lightString).append(EscapeSequences.EMPTY);
             return !light;
@@ -149,5 +257,47 @@ public class GameInterface extends Interface {
             };
         }
         return piece;
+    }
+
+    private int getCol() {
+        while (true) {
+            String col = promptString("Column Letter: ");
+
+            if (col.length() != 1) {
+                System.out.println("Please enter a valid single column letter.");
+                continue;
+            }
+            char columnChar = col.toLowerCase().charAt(0);
+
+            switch (columnChar) {
+                case 'a': return 1;
+                case 'b': return 2;
+                case 'c': return 3;
+                case 'd': return 4;
+                case 'e': return 5;
+                case 'f': return 6;
+                case 'g': return 7;
+                case 'h': return 8;
+            }
+            System.out.println("Invalid column letter. Please enter a valid column letter (a-h).");
+        }
+    }
+
+    private int getRow() {
+        while (true) {
+            int row;
+            try {
+                row = promptInt("Row Number: ");
+            } catch (Exception e) {
+                System.out.println("Invalid Row. Please enter a number between 1 and 8");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (0 < row && row < 9) {
+                return row;
+            }
+            System.out.println("Invalid Row. Please enter a number between 1 and 8");
+        }
     }
 }

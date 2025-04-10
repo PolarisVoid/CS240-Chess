@@ -1,5 +1,7 @@
 package chess;
 
+import com.google.gson.Gson;
+
 import java.util.Objects;
 
 /**
@@ -25,8 +27,8 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return  "Row=" + row +
-                ", Col=" + col;
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     private final int row;

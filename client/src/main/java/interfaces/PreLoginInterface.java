@@ -13,6 +13,7 @@ public class PreLoginInterface extends Interface {
 
     public PreLoginInterface(Client client) {
         super(client);
+        help();
     }
 
     public String ui() {
