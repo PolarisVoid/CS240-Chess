@@ -8,10 +8,11 @@ public class LoadGameResponse {
     ChessGame game;
 
     public String toString() {
-        return String.format("{\"serverMessageType\": \"%s\", \"game\": \"%s\"}", serverMessageType, "value");
+        return String.format("{\"serverMessageType\": \"%s\", \"game\": %s}", serverMessageType, game);
     }
 
     public LoadGameResponse (ChessGame game) {
         this.game = game;
     }
+    public ChessGame getGame() {return this.game;}
 }

@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Arrays;
 import java.util.Objects;
+import com.google.gson.Gson;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -26,19 +27,8 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        StringBuilder boardString = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            boardString.append(" {");
-            for (int j = 0; j < 8; j++) {
-                boardString.append(" ").append(board[i][j]);
-            }
-            boardString.append(" }\n");
-        }
-
-
-        return "ChessBoard{\n" +
-                "Board=" + boardString +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     public ChessBoard copy() {

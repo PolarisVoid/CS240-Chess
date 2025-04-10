@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
+import com.google.gson.Gson;
 
 /**
  * Represents a single chess piece
@@ -27,10 +28,8 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return "ChessPiece{" +
-                "TeamColor=" + teamColor +
-                ", Type=" + type +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     public ChessPiece copy() {

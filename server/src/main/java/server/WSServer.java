@@ -3,6 +3,7 @@ package server;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import handlers.WebSocketHandler;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.Session;
@@ -29,6 +30,11 @@ public class WSServer {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @OnWebSocketError
+    public void onWebSocketError(Session session, Throwable error) {
+        System.out.println("WebSocket Error: " + error.getMessage());
     }
 
     private String getCommand(String message) {

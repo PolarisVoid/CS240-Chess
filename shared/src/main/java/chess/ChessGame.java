@@ -1,5 +1,7 @@
 package chess;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,6 +16,12 @@ public class ChessGame {
     ChessBoard board;
     TeamColor nextTurn;
     TeamColor resigned;
+
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 
     public ChessGame() {
         board = new ChessBoard();

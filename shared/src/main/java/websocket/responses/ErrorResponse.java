@@ -15,4 +15,5 @@ public class ErrorResponse {
     public ErrorResponse(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+    public String getErrorMessage() {return this.errorMessage;}
 }
