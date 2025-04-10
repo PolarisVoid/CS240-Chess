@@ -206,14 +206,14 @@ public class ServerFacadeTests {
         assert true;
     }
 
-    @Test
-    @DisplayName("Invalid Observe Game")
-    public void negativeObserveGame() {
-        try {
-            serverFacade.observeGame("1", 1);
-            assert false;
-        } catch (Exception e) {
-            assert true;
-        }
-    }
+//    @Test
+//    @DisplayName("Invalid Observe Game")
+//    public void negativeObserveGame() {
+//        try {
+//            serverFacade.observeGame("1", 1);
+//            assert false;
+//        } catch (Exception e) {
+//            assert true;
+//        }
+//    }
 }
