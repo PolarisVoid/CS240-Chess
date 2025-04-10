@@ -77,6 +77,7 @@ public class PostLoginInterface extends Interface {
 
         try {
             serverFacade.joinGame(authToken, color, game.gameID());
+            serverFacade.connect(authToken, game.gameID());
         } catch (AlreadyTaken e) {
             System.out.println("Already Taken");
             return;
@@ -95,7 +96,7 @@ public class PostLoginInterface extends Interface {
         GameData game = getGame();
 
         try {
-            serverFacade.observeGame(authToken, game.gameID());
+            serverFacade.connect(authToken, game.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
