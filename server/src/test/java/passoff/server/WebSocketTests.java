@@ -394,7 +394,7 @@ public class WebSocketTests {
     }
 
     private void assertLoadGame(String username, TestMessage message) {
-        Assertions.assertEquals(ServerMessage.ServerMessageType.LOAD_GAME, message.getServerMessageType(),
+        Assertions.assertEquals(LOAD_GAME, message.getServerMessageType(),
                 "Message for %s was not a LOAD_GAME message: %s".formatted(username, message));
         Assertions.assertNotNull(message.getGame(),
                 "%s's LOAD_GAME message did not contain a game (Make sure it's specifically called 'game')".formatted(username));
