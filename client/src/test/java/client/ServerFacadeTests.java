@@ -6,7 +6,7 @@ import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.*;
 import server.Server;
-import ui.ServerFacade;
+import facades.ServerFacade;
 
 import java.net.HttpURLConnection;
 import java.net.URI;

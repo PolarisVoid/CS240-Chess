@@ -1,6 +1,7 @@
-package ui;
+package facades;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.*;
 import exception.AlreadyTaken;
 import exception.BadRequest;
@@ -8,6 +9,8 @@ import exception.ServerError;
 import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
+import websocket.commands.UserGameCommand;
+import websocket.requests.LeaveRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +24,16 @@ import java.util.Map;
 public class ServerFacade {
 
     private final String serverURL;
+    private WSClient wsClient;
     public ServerFacade(int port) {
         serverURL = "http://localhost:" + port;
+        try {
+            URI uri = new URI(serverURL + "/ws");
+            wsClient = new WSClient(uri);
+        } catch (Exception e) {
+            System.out.println("Failed To connect");
+        }
+
     }
 
     private HttpURLConnection sendRequest(String url, String method, JsonObject header, String body) throws URISyntaxException, IOException {
@@ -151,7 +162,7 @@ public class ServerFacade {
         return gamesData;
     }
 
-    public void joinGame(String authToken, ChessGame.TeamColor color, Number gameID) throws Exception {
+    public void joinGame(String authToken, ChessGame.TeamColor color, int gameID) throws Exception {
         String url = serverURL + "/game";
         String method = "PUT";
         JsonObject header = new JsonObject();
@@ -165,17 +176,64 @@ public class ServerFacade {
         }
     }
 
-    public void observeGame(String authToken, Number gameID) throws Exception {
-        String url = serverURL + "/observe";
-        String method = "PUT";
-        JsonObject header = new JsonObject();
-        header.addProperty("authorization", authToken);
-        String format = "{\"gameID\":\"%d\"}";
-        String body = String.format(format, gameID);
-        HttpURLConnection http = sendRequest(url, method, header, body);
-        int status = http.getResponseCode();
-        if (!(status >= 200 && status < 300)) {
-            getError(status);
-        }
+    public void observeGame(String authToken, int gameID) throws Exception {
+        JsonObject message = new JsonObject();
+        message.addProperty("commandType", "CONNECT");
+        message.addProperty("authToken", authToken);
+        message.addProperty("gameID", gameID);
+        message.addProperty("observer", true);
+        message.add("color", null); // You can skip this if not needed
+
+        wsClient.sendMessage(new Gson().toJson(message));
     }
+
+
+    public void connect(String authToken, int gameID, ChessGame.TeamColor color) throws Exception {
+        JsonObject message = new JsonObject();
+        message.addProperty("commandType", "CONNECT");
+        message.addProperty("authToken", authToken);
+        message.addProperty("gameID", gameID);
+        message.addProperty("observer", false);
+        message.addProperty("color", color.toString());
+
+        wsClient.sendMessage(new Gson().toJson(message));
+    }
+
+
+    public void makeMove(String authToken, int gameID, ChessGame.TeamColor color, ChessMove move) throws Exception {
+        JsonObject message = new JsonObject();
+        message.addProperty("commandType", "MAKE_MOVE");
+        message.addProperty("authToken", authToken);
+        message.addProperty("gameID", gameID);
+        message.addProperty("color", color.toString());
+        message.addProperty("move", move.toString());
+
+        wsClient.sendMessage(new Gson().toJson(message));
+    }
+
+
+    public void leave(String authToken, int gameID, boolean observer, ChessGame.TeamColor color) throws Exception {
+        LeaveRequest request = new LeaveRequest(UserGameCommand.CommandType.LEAVE, authToken, gameID, observer, color);
+
+        JsonObject message = new JsonObject();
+        message.addProperty("commandType", "LEAVE");
+        message.addProperty("authToken", authToken);
+        message.addProperty("gameID", gameID);
+        message.addProperty("observer", observer);
+        message.addProperty("color", color.toString());
+
+        wsClient.sendMessage(new Gson().toJson(message));
+    }
+
+    public void resign(String authToken, int gameID, ChessGame.TeamColor color) throws Exception {
+        JsonObject message = new JsonObject();
+        message.addProperty("commandType", "RESIGN");
+        message.addProperty("authToken", authToken);
+        message.addProperty("gameID", gameID);
+        message.addProperty("color", color.toString());
+
+        wsClient.sendMessage(new Gson().toJson(message));
+    }
+
+
 }
