@@ -14,8 +14,8 @@ public class Interface{
     final String authToken;
     final ServerFacade serverFacade;
 
-    public Interface(Client client, String[] COMMANDS) {
-        this.commands = COMMANDS;
+    public Interface(Client client, String[] commands) {
+        this.commands = commands;
         this.client = client;
         this.serverFacade = this.client.getServerFacade();
         this.authToken = client.getAuthToken();

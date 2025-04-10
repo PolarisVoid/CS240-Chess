@@ -18,16 +18,6 @@ public class PostLoginInterface extends Interface {
         help();
     }
 
-    public String ui() {
-        while (true) {
-            String command = promptString("");
-            if (Arrays.asList(COMMANDS).contains(command)) {
-                return command;
-            }
-            System.out.println("Invalid Command");
-        }
-    }
-
     public void help() {
         System.out.println("Help - Displays commands the user can run");
         System.out.println("Logout - Allows for signing out");

@@ -171,11 +171,6 @@ public class WebSocketService extends BaseService {
         sendMessages(gameID, notificationResponse.toString(), excludeSession);
     }
 
-    private static void notifyMe(Session session, String message) {
-        NotificationResponse notificationResponse = new NotificationResponse(message);
-        sendMessage(session, notificationResponse.toString());
-    }
-
     public static void sendMessages(Integer gameID, String message, Session excludeSession) {
         ArrayList<Session> sessions = gameSessions.get(gameID);
         if (sessions == null) {
