@@ -47,18 +47,6 @@ public class GameInterface extends Interface {
     public void redrawChessBoard() {printBoard();}
 
     public void leaveGame() {
-        ChessGame chessGame = game.game();
-        if (chessGame == null) {
-            System.out.println("Game board doesn't Exist");
-            serverFacade.leave(authToken, game.gameID());
-            client.setInterface(new PostLoginInterface(this.client));
-            return;
-        }
-
-        if (chessGame.getResigned() != null) {
-            serverFacade.resign(authToken, game.gameID());
-        }
-
         serverFacade.leave(authToken, game.gameID());
         client.setInterface(new PostLoginInterface(this.client));
     }
@@ -139,9 +127,16 @@ public class GameInterface extends Interface {
         ChessGame chessGame = game.game();
         ChessBoard board = chessGame.getBoard();
         ChessPiece piece = board.getPiece(chessPosition);
-        highlightMoves = (ArrayList<ChessMove>) piece.pieceMoves(board, chessPosition);
+
+        if (piece == null) {
+            printBoard();
+            return;
+        }
+
+        highlightMoves = (ArrayList<ChessMove>) chessGame.validMoves(chessPosition);
         chessPiecePosition = chessPosition;
         printBoard();
+        chessPiecePosition = null;
         highlightMoves = new ArrayList<>();
     }
 
@@ -216,8 +211,8 @@ public class GameInterface extends Interface {
         ChessPosition chessPosition = new ChessPosition(i, j);
         ChessPiece piece = board.getPiece(chessPosition);
         String lightString;
-        if (chessPosition == chessPiecePosition) {
-            lightString = EscapeSequences.SET_BG_COLOR_YELLOW;
+        if (Objects.equals(chessPosition, chessPiecePosition)) {
+            lightString = EscapeSequences.SET_BG_COLOR_MAGENTA;
         } else if (containsMove(chessPosition)) {
             lightString = light ? EscapeSequences.SET_BG_COLOR_GREEN : EscapeSequences.SET_BG_COLOR_DARK_GREEN;
         } else {

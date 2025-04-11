@@ -10,8 +10,6 @@ import exception.Unauthorized;
 import model.AuthData;
 import model.GameData;
 import ui.Client;
-import websocket.commands.UserGameCommand;
-import websocket.requests.LeaveRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -199,7 +197,6 @@ public class ServerFacade {
         message.addProperty("gameID", gameID);
         message.add("move", new Gson().toJsonTree(move));
 
-        System.out.println(message);
         wsClient.sendMessage(new Gson().toJson(message));
     }
 
