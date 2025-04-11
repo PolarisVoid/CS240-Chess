@@ -177,8 +177,9 @@ public class WebSocketService extends BaseService {
             notifyAllExceptMe(request.gameID(), "Stalemate! It's a draw. Game over.", session);
         } else if (game.isInCheck(opponent)) {
             notifyAllExceptMe(request.gameID(), "Check! " + authData.username() + " has your king under threat.", session);
+        } else {
+            notifyAllExceptMe(request.gameID(), getMoveMessage(authData.username(), request.move()), session);
         }
-        notifyAllExceptMe(request.gameID(), getMoveMessage(authData.username(), request.move()), session);
     }
 
     public static void handleLeave(Session session, LeaveRequest request) throws Exception {

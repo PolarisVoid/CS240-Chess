@@ -114,7 +114,20 @@ public class GameInterface extends Interface {
             System.out.println("You are an observer and can't resign");
             return;
         }
-        serverFacade.resign(authToken, game.gameID());
+
+        while (true) {
+            String command = promptString("Are you sure you want to Resign? YES or NO");
+
+            if (Objects.equals(command, "YES")) {
+                serverFacade.resign(authToken, game.gameID());
+                return;
+            } else if (Objects.equals(command, "NO")) {
+                return;
+            } else {
+                System.out.println("Please type YES or NO.");
+            }
+        }
+
     }
 
     public void highlightLegalMoves() {
