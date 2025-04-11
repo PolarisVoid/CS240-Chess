@@ -1,6 +1,8 @@
 package service;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import dataaccess.DataAccessException;
 import exceptions.InvalidRequestException;
 import exceptions.UnathorizedException;
@@ -88,6 +90,45 @@ public class WebSocketService extends BaseService {
         }
     }
 
+    private static char convertCol(int col) {
+        switch (col) {
+            case 1 -> {
+                return 'a';
+            }
+            case 2 -> {
+                return 'b';
+            }
+            case 3 -> {
+                return 'c';
+            }
+            case 4 -> {
+                return 'd';
+            }
+            case 5 -> {
+                return 'e';
+            }
+            case 6 -> {
+                return 'f';
+            }
+            case 7 -> {
+                return 'g';
+            }
+            case 8 -> {
+                return 'h';
+            }
+        }
+        return ' ';
+    }
+
+    private static String getMoveMessage(String user, ChessMove move) {
+        ChessPosition start = move.getStartPosition();
+        ChessPosition end = move.getEndPosition();
+        return user + " made a move." +
+                convertCol(start.getColumn()) +
+                start.getRow() + " to " + convertCol(end.getColumn()) +
+                end.getRow();
+    }
+
     public static void handleConnect(Session session, ConnectionRequest request) throws Exception {
         AuthData authData = authenticate(request.authToken());
         GameData gameData = GAME_DAO.getGame(request.gameID());
@@ -99,7 +140,14 @@ public class WebSocketService extends BaseService {
                 return;
             }
         }
-        notifyAllExceptMe(request.gameID(), authData.username() + " joined the game", session);
+
+        ChessGame.TeamColor color = getUserColor(authData, gameData);
+        String message = authData.username() + " joined the game";
+        if (color != null) {
+            message += " as " + color;
+        }
+
+        notifyAllExceptMe(request.gameID(), message, session);
         sessions.add(session);
         gameSessions.put(request.gameID(), sessions);
         sendMessage(session, new LoadGameResponse(gameData.game()).toString());
@@ -119,13 +167,18 @@ public class WebSocketService extends BaseService {
         updateChessGame(gameData, game);
         sendMessages(request.gameID(), new LoadGameResponse(game).toString(), null);
 
-        if (game.isInStalemate(color)) {
-            notifyAllExceptMe(request.gameID(), "Stalemate! Game Over", session);
-        } else if (game.isInCheckmate(color)) {
-            notifyAllExceptMe(request.gameID(), "CheckMate! Game Over", session);
-        } else {
-            notifyAllExceptMe(request.gameID(), authData.username() + " made a move.", session);
+        ChessGame.TeamColor opponent = (color == ChessGame.TeamColor.WHITE)
+                ? ChessGame.TeamColor.BLACK
+                : ChessGame.TeamColor.WHITE;
+
+        if (game.isInCheckmate(opponent)) {
+            notifyAllExceptMe(request.gameID(), "Checkmate! " + authData.username() + " wins! Game over.", session);
+        } else if (game.isInStalemate(opponent)) {
+            notifyAllExceptMe(request.gameID(), "Stalemate! It's a draw. Game over.", session);
+        } else if (game.isInCheck(opponent)) {
+            notifyAllExceptMe(request.gameID(), "Check! " + authData.username() + " has your king under threat.", session);
         }
+        notifyAllExceptMe(request.gameID(), getMoveMessage(authData.username(), request.move()), session);
     }
 
     public static void handleLeave(Session session, LeaveRequest request) throws Exception {
